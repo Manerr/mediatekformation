@@ -35,7 +35,14 @@
                 </th>
                 <th class="text-center align-top" scope="col">
                     &nbsp;
-                </th>				
+                </th>               
+                <th class="text-center align-top" scope="col">
+                    Formations
+                    <div>
+                        <a href="{{ path('playlists.sort', {champ:'formations', ordre:'ASC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true">&lt;</a>
+                        <a href="{{ path('playlists.sort', {champ:'formations', ordre:'DESC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true">&gt;</a>
+                    </div>
+                </th>               
             </tr>
         </thead>
         <tbody>
@@ -58,6 +65,9 @@
                         </td>            					
                         <td class="text-center">
                             <a href="{{ path('playlists.showone', {id:playlists[k].id}) }}" class="btn btn-secondary">Voir détail</a>
+                        </td>
+                        <td>
+                            <span class="align-middle">{{ playlists[k].formations|length}} formations</span>
                         </td> 					
                     </tr>
                 {% endfor %}	
