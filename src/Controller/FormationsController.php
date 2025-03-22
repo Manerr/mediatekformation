@@ -26,17 +26,19 @@ class FormationsController extends AbstractController {
      * @var CategorieRepository
      */
     private $categorieRepository;
-    
+    private $FORMATIONS_TWIG_PATH;
+
     function __construct(FormationRepository $formationRepository, CategorieRepository $categorieRepository) {
         $this->formationRepository = $formationRepository;
         $this->categorieRepository= $categorieRepository;
+        $this->FORMATIONS_TWIG_PATH = "pages/formations.html.twig";
     }
     
     #[Route('/formations', name: 'formations')]
     public function index(): Response{
         $formations = $this->formationRepository->findAll();
         $categories = $this->categorieRepository->findAll();
-        return $this->render("pages/formations.html.twig", [
+        return $this->render($this->FORMATIONS_TWIG_PATH, [
             'formations' => $formations,
             'categories' => $categories
         ]);
@@ -46,7 +48,7 @@ class FormationsController extends AbstractController {
     public function sort($champ, $ordre, $table=""): Response{
         $formations = $this->formationRepository->findAllOrderBy($champ, $ordre, $table);
         $categories = $this->categorieRepository->findAll();
-        return $this->render("pages/formations.html.twig", [
+        return $this->render($this->FORMATIONS_TWIG_PATH, [
             'formations' => $formations,
             'categories' => $categories
         ]);
@@ -57,7 +59,7 @@ class FormationsController extends AbstractController {
         $valeur = $request->get("recherche");
         $formations = $this->formationRepository->findByContainValue($champ, $valeur, $table);
         $categories = $this->categorieRepository->findAll();
-        return $this->render("pages/formations.html.twig", [
+        return $this->render($this->FORMATIONS_TWIG_PATH, [
             'formations' => $formations,
             'categories' => $categories,
             'valeur' => $valeur,
@@ -68,7 +70,7 @@ class FormationsController extends AbstractController {
     #[Route('/formations/formation/{id}', name: 'formations.showone')]
     public function showOne($id): Response{
         $formation = $this->formationRepository->find($id);
-        return $this->render("pages/formation.html.twig", [
+        return $this->render($this->FORMATIONS_TWIG_PATH, [
             'formation' => $formation
         ]);        
     }   
