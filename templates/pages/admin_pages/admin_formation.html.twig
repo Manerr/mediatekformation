@@ -1,21 +1,51 @@
 {% extends "adminbase.html.twig" %}
 {% block body %}
+<style type="text/css">
+select option:checked {
+  background-color: #3975ff !important;
+  color: white!important;
+}
+</style>
 
-    <div class="d-flex flex-row justify-content-end mt-2">
-        <a href="#" class="btn btn-secondary m-1">Enregistrer</a>
+    <div class="d-flex flex-row justify-content-end mt-2" style="margin-bottom: -1rem;">
+
+        {% if creating == false %}
         <form action="{{ path('admin.formations.suppr', {id: formation.id}) }}" method="post" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer la formation {{ formation.title }} ?')">
             <input type="hidden" name="_token" value="{{ csrf_token('delete_formation_' ~ formation.id) }}">
             <button type="submit" class="btn btn-danger m-1">Supprimer</button>
         </form>
+        {% endif %}
     </div>
+
+    {% if creating == false %}
     <form class="row mt-3" method="POST" action="modifier_formation">
+    {% else %}
+    <form class="row mt-3" method="POST" action="nouvelle_formation">
+    {% endif %}
+        
+        <div class="container d-flex w-100 justify-content-end">
+            
+        {% if creating == false %}
+            <input type="hidden" name="_token" value="{{ csrf_token('enregistrer_formation_' ~ formation.id) }}">            
+            <input type="hidden" name="formation_id" value="{{ formation.id }}">            
+            <button type="submit" class="btn btn-primary m-1">Enregistrer</button>
+        
+        {% else %}
+
+            <input type="hidden" name="_token" value="{{ csrf_token('enregistrer_formation') }}">            
+            <button type="submit" class="btn btn-primary m-1">Enregistrer</button>
+
+        {% endif %}
+
+
+        </div>
+
         <div class="row">
             <div class="col">
             <!-- emplacement de la vidéo -->
-            {% if formation.videoid %}
                 <div style="width: 560px; height: 315px; float: none; clear: both; margin: 2px auto;">
                   <embed
-                    src="https://www.youtube.com/embed/{{ formation.videoid }}" 
+                    src="https://www.youtube.com/embed/{{ formation.videoid|default('') }}" 
                     wmode="transparent"
                     type="video/mp4"
                     width="100%" height="100%"
@@ -24,26 +54,76 @@
                     title="YouTube video player"
                   >
                 </div>
-            {% endif %}
             <div class="mt-2">
-                <label for="videoIdInput" class="form-label"><strong>URL ou ID de la vidéo YouTube :</strong></label>
-                <input type="text" class="form-control" id="videoIdInput" name="formation_videoid" value="{{ formation.videoid }}" placeholder="Exemple : dQw4w9WgXcQ">
+                <label for="videoIdInput" class="form-label"><strong>ID de la vidéo YouTube :</strong></label>
+                <input type="text" class="form-control" id="videoIdInput" name="formation_videoid" value="{{ formation.videoid|default('') }}" placeholder="Exemple : https://www.youtube.com/watch?v=xfkwTbvq-Mo">
             </div>
         </div>
         <div class="col">
-            {{ formation.publishedatstring }}
-            <!-- <h4 class="text-info mt-5">{{ formation.title }}</h4> -->
-            <input type="text" class="form-control text-info mt-5 mb-3" id="titleInput" name="formation_title" value="{{ formation.title }}" style="font-size: 1.5rem;">
-            <strong>playlist : </strong>{{ formation.playlist.name }}<br />
+
+
+            {% if creating == true %}
+            <strong>Date de création :</strong><br/>
+            {% endif %}
+
+            <input type="date" name="date" class="form-control mt-2" max="{{ 'now'|date('Y-m-d') }}" value='{% if formation is defined and formation.publishedatstring %}{{ formation.publishedatstring | replace({"/": "-"}) | date("Y-m-d") }}{% else %}{{ "now"|date("Y-m-d") }}{% endif %}' />
+
+
+
+            <input type="text" class="form-control text-info mt-5 mb-3" id="titleInput" name="formation_title" value="{{ formation.title ?? 'Titre' }}" style="font-size: 1.5rem;">
+            <strong>playlist : </strong>
+
+            {% if creating == false %}
+
+                <select class="form-control mt-2 mb-1" name="playlist_formation">
+                    {% for play in toutesplaylists %}
+                        {% if formation.playlist.name == play.name%}
+                            <option value="{{play.name}}" selected>{{play.name}}</option>
+                        {% else %}
+                            <option value="{{play.name}}">{{play.name}}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+
+            {% else %}
+
+                <select class="form-control mt-2 mb-1" name="playlist_formation">
+                    {% for playlist in toutesplaylists %}
+                    <option value="{{playlist.name}}">{{playlist.name}}</option>
+                    {% endfor %}
+                </select>
+
+            {% endif %}
+
             <strong>catégories : </strong>
-                {% for categorie in formation.categories %}
-                    {{ categorie.name }}&nbsp;
-                {% endfor %}
+            <div class="d-inline-block align-top ms-1 mt-2 d-flex">
+                       
+            {% if formation is defined %}
+                {% set selectedCategoryIds = formation.categories|map(categorie => categorie.id) %}
+                <select name="formation_categories[]" class="form-select" multiple>
+                    {% for categorie in toutescategories %}
+                        <option value="{{ categorie.name }}" 
+                            {% if categorie.id in selectedCategoryIds %}selected{% endif %}>
+                            {{ categorie.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            {% else %}
+                <select name="formation_categories[]" class="form-select" multiple>
+                    {% for categorie in categories %}
+                        <option value="{{ categorie.name }}">{{ categorie.name }}</option>
+                    {% endfor %}
+                </select>
+            {% endif %}
+
+
+            </div>
+
+
             <br /><br />
             <strong>description :</strong><br />
-            <textarea name="formation_description" class="form-control" rows="9">
-{{ formation.description }}
-            </textarea>
+            <textarea name="formation_description" class="form-control mt-2" rows="9">
+{{ formation.description|default("Description") }}</textarea>
         </div>
     </div>
     </form>
@@ -67,7 +147,17 @@
                     embedVideo.src = `https://www.youtube.com/embed/${videoId}`;
                 }
             });
+                        
+            document.querySelectorAll('option').forEach(option => {
+                option.addEventListener('mousedown', function(e) {
+                    e.preventDefault();
+                    this.selected = !this.selected;
+                });
+            });
+
         }
+
+
     </script>
 {% endblock %}
 

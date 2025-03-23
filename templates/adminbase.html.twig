@@ -8,8 +8,8 @@
     <img alt="Bannière du site mediatekformation" src="{{ app.request.getBasePath()~'/banniere.jpg' }}" >
 	</div>
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-	 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-	     <ul class="navbar-nav mr-auto">
+	 <div class="collapse navbar-collapse" id="navbarSupportedContent w-100">
+	     <ul class="navbar-nav mr-auto w-100">
 	         <li class="nav-item">
                  <a class="nav-link" href="{{ path('admin.accueil') }}">Accueil</a>
 	         </li>
@@ -18,7 +18,12 @@
 	         </li>
 	         <li class="nav-item">
 	             <a class="nav-link" href="{{ path('playlists') }}">Playlists</a>
-	         </li>                    
+	         </li>    
+             <li class="nav-item ms-auto">
+                <button class="btn btn-primary">
+                    Se connecter
+                </button>
+            </li>                  
 	     </ul>
 	 </div>
 	</nav>        

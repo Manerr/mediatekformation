@@ -42,7 +42,20 @@ class PlaylistRepository extends ServiceEntityRepository
                 ->getQuery()
                 ->getResult();       
     } 
-    
+
+
+    /**
+     * Retourne toutes les playlists 
+     * @param type $champ
+     * @param type $ordre
+     * @return Playlist[]
+     */
+    public function findAll(): array{
+        return $this->createQueryBuilder('p')
+                ->getQuery()
+                ->getResult();
+    } 
+
     /**
      * Retourne toutes les playlists triées sur le nombre de formations 
      * @param type $champ

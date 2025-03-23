@@ -30,6 +30,19 @@ class FormationRepository extends ServiceEntityRepository
 
     /**
      * Retourne toutes les formations triées sur un champ
+     * @return Formation[]
+     */
+    public function findAll(): array{
+        return $this->createQueryBuilder('f')
+                    ->orderBy('f.publishedAt','DESC')
+                    ->getQuery()
+                    ->getResult();
+    }
+
+
+
+    /**
+     * Retourne toutes les formations triées sur un champ
      * @param type $champ
      * @param type $ordre
      * @param type $table si $champ dans une autre table

@@ -43,5 +43,17 @@ class CategorieRepository extends ServiceEntityRepository
                 ->getQuery()
                 ->getResult();        
     }  
+
+    /**
+     * Retourne toutes les catégories
+     * @return Categorie[]
+     */
+    public function findAllCategories(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->orderBy('c.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
     
 }
