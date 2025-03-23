@@ -1,5 +1,23 @@
 {% extends "basefront.html.twig" %}
 {% block body %}
+
+    <div class="container m-auto">
+        {% for label, flashes in app.session.flashbag.all %}
+            {% for flash in flashes %}
+                {% if ( label == 'success' ) %}
+                    <div class="alert alert-success alert-dismissible fade show">
+                        {{ flash }}
+                    </div>
+                {% elseif ( label == 'error' ) %}
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        {{ flash }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+
+    </div>
+
     <table class="table table-striped">
         <caption>Tableau des formations</caption>
         <thead>
@@ -77,11 +95,30 @@
                     </td>
                     <td class="text-center">
                         {% if formation.miniature %}
+                            
+                            {% if controller_name|default == 'adminBackController' %}
+                            <a href="{{ path('admin.formations.showone', {id:formation.id}) }}">
+                                <img src="{{ formation.miniature }}" alt="miniature de la formation">
+                            </a>
+                            {% else %}
                             <a href="{{ path('formations.showone', {id:formation.id}) }}">
                                 <img src="{{ formation.miniature }}" alt="miniature de la formation">
                             </a>
+                            {% endif %}
                         {% endif %}
                     </td>
+                    {% if controller_name|default == 'adminBackController' %}
+                        <td>
+                            <div class="d-flex flex-row justify-content-center mt-2">
+                                <a href="{{ path('admin.formations.showone', {id:formation.id}) }}" class="btn btn-secondary m-1">Modifier</a>
+                                <form action="{{ path('admin.formations.suppr', {id: formation.id}) }}" method="post" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer la formation {{ formation.title }} ?')">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete_formation_' ~ formation.id) }}">
+                                    <button type="submit" class="btn btn-danger m-1">Supprimer</button>
+                                </form>
+                            </div>                        
+                        </td>
+                    {% endif %}
+                    
                 </tr>
             {% endfor %}
         </tbody>
