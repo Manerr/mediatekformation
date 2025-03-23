@@ -69,8 +69,13 @@
                     <a href="{{ path('formations.sort', {champ:'publishedAt', ordre:'ASC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true"><</a>
                     <a href="{{ path('formations.sort', {champ:'publishedAt', ordre:'DESC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true">></a>                    
                 </th>
-                <th class="text-center align-top" scope="col">
-                    &nbsp;
+                <th></th>
+                <th class="text-center align-middle" scope="col">
+                    {% if controller_name|default == 'adminBackController' %}
+                    <a class="btn btn-primary" href="{{ path('admin.creer_formations') }}">
+                        Ajouter une formation
+                    </a>
+                    {% endif %}
                 </th>
             </tr>
         </thead>

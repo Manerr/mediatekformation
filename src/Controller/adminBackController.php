@@ -101,10 +101,23 @@ class adminBackController extends AbstractController
     public function showOne($id): Response{
         $formation = $this->formationRepository->find($id);
         return $this->render($this->FORMATION_TWIG_PATH, [
+            'creating' => false,
             'formation' => $formation,
             'categories' => $this->categorieRepository
         ]);
     }   
+
+    #[Route('/admin/ajouter_formation/', name: 'admin.creer_formations')]
+    public function createFormation(): Response{
+        // $formation = $this->formationRepository->find($id);
+        return $this->render($this->FORMATION_TWIG_PATH, [
+            'creating' => true,
+            'categories' => $this->categorieRepository
+        ]);
+    }   
+
+
+
 
     #[Route('/admin/formations/suppr/{id}', name: 'admin.formations.suppr', methods: ['GET','POST'])]
     public function supprimerFormation(int $id, Request $request): Response

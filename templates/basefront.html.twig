@@ -9,9 +9,12 @@
             <img src="{{ app.request.getBasePath()~'/banniere.jpg' }}" alt="Bannière du site" >
         </div>
         <!-- menu -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light w-100">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse w-100" id="navbarSupportedContent">
+                <ul class="navbar-nav d-flex w-100">
                     <li class="nav-item">
 
                         {% if controller_name|default == 'adminBackController' %}
@@ -38,7 +41,13 @@
                         <a class="nav-link" href="{{ path('playlists') }}">Playlists</a>
                         {% endif %}
 
-                    </li>                    
+                    </li>  
+
+                    <li class="nav-item ms-auto">
+                        <button class="btn btn-primary">
+                            Se connecter
+                        </button>
+                    </li>                  
                 </ul>
             </div>
         </nav>        
