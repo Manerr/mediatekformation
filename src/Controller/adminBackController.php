@@ -4,6 +4,8 @@ namespace App\Controller;
 use DateTime;
 use App\Service\FormationService;
 
+use App\Entity\Categorie;
+
 use App\Repository\CategorieRepository;
 use App\Repository\FormationRepository;
 use App\Repository\PlaylistRepository;
@@ -39,12 +41,14 @@ class adminBackController extends AbstractController
 
     private $FORMATIONS_TWIG_PATH;
     private $FORMATION_TWIG_PATH;
+    private $CATEGORIES_TWIG_PATH;
 
     function __construct(FormationRepository $formationRepository, CategorieRepository $categorieRepository, PlaylistRepository $playlistRepository) {
         $this->formationRepository = $formationRepository;
         $this->categorieRepository = $categorieRepository;
         $this->playlistRepository = $playlistRepository;
         $this->FORMATIONS_TWIG_PATH = "pages/formations.html.twig";
+        $this->CATEGORIES_TWIG_PATH = "pages/admin_pages/categories.html.twig";
         $this->FORMATION_TWIG_PATH = "pages/admin_pages/admin_formation.html.twig";
         $this->ADMIN_ACCUEIL_TWIG_PATH = "adminbase.html.twig";
         $this->CONTROLLER_NAME = "adminBackController";
@@ -76,6 +80,43 @@ class adminBackController extends AbstractController
             'controller_name' => $this->CONTROLLER_NAME
         ]);
     }
+
+
+    #[Route('/admin/categories', name: 'admin.categories')]
+    public function categories_page(): Response
+    {       
+        $formations = $this->formationRepository->findAll();
+        $categories = $this->categorieRepository->findAll();
+        return $this->render($this->CATEGORIES_TWIG_PATH, [
+            'formations' => $formations,
+            'categories' => $categories,
+            'controller_name' => $this->CONTROLLER_NAME
+        ]);
+    }
+
+    #[Route('/admin/nouvelle_categorie', name: 'admin.nouvelle_categorie')]
+    public function nouvelleCategorie(Request $request): Response
+    {
+
+
+
+        // Vérification du token CSRF
+        if (!$this->isCsrfTokenValid('nouvelle_categorie', $request->request->get('_token'))) {
+            $this->addFlash('danger', 'Token CSRF invalide.');
+            return $this->redirectToRoute('admin.categories');
+        }
+
+        $this->categorie = new Categorie();
+        $this->categorie->setName($request->get("nom_nouvelle_categorie"));
+
+
+        $this->categorieRepository->add($this->categorie);
+
+        $this->addFlash('success', 'Catégorie ajoutée avec succès.');
+
+        return $this->redirectToRoute('admin.categories');
+    }
+
 
     
     #[Route('/admin/tri/{champ}/{ordre}/{table}', name: 'formations.sort')]
@@ -246,6 +287,38 @@ public function saveAjouterFormation(Request $request, FormationService $formati
 
         return $this->redirectToRoute('admin.formations');
     }
+
+
+    #[Route('/admin/categories/suppr/{id}', name: 'admin.categories.suppr', methods: ['GET','POST'])]
+    public function supprimerCategorie(int $id, Request $request): Response
+    {
+        $categorie = $this->categorieRepository->find($id);
+
+        if (!$categorie) {
+            $this->addFlash('danger', 'Formation non trouvée.');
+            return $this->redirectToRoute('admin.categories');
+        }
+
+        // Vérification du token CSRF
+        if (!$this->isCsrfTokenValid('delete_categorie_' . $id, $request->request->get('_token'))) {
+            $this->addFlash('danger', 'Token CSRF invalide.');
+            return $this->redirectToRoute('admin.categories');
+        }
+
+        $this->categorieRepository->remove($categorie);
+
+        $this->addFlash('success', 'Catégorie supprimée avec succès.');
+
+        return $this->redirectToRoute('admin.categories');
+    }
+
+
+
+
+
+
+
+
 
 
 }

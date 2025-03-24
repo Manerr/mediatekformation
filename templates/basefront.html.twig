@@ -42,6 +42,13 @@
                         {% endif %}
 
                     </li>  
+                    {% if controller_name|default == 'adminBackController' %}
+                    <li class="nav-item">
+                        
+                        <a class="nav-link" href="{{ path('admin.categories') }}">Catégories</a>
+
+                    </li>  
+                        {% endif %}
 
                     <li class="nav-item ms-auto">
                         <button class="btn btn-primary">
