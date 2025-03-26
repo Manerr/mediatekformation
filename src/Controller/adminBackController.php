@@ -5,6 +5,7 @@ use DateTime;
 use App\Service\FormationService;
 
 use App\Entity\Categorie;
+use App\Entity\Playlist;
 
 use App\Repository\CategorieRepository;
 use App\Repository\FormationRepository;
@@ -246,7 +247,7 @@ class adminBackController extends AbstractController
 
 
     #[Route('/admin/ajouter_formation/', name: 'admin.creer_formations')]
-    public function createFormation(): Response{
+    public function formations_gestion(): Response{
         // $formation = $this->formationRepository->find($id);
         return $this->render($this->FORMATION_TWIG_PATH, [
             'creating' => true,
@@ -324,6 +325,10 @@ class adminBackController extends AbstractController
             return $this->redirectToRoute('admin.playlists');
             }
 
+            $this->playlist = new Playlist();
+            $this->playlist->setName($nom);
+            $this->playlistRepository->add($this->playlist);
+
             $this->addFlash('success', 'Playlist ajoutée avec succès.');
 
         } else {
@@ -389,8 +394,8 @@ class adminBackController extends AbstractController
     #[Route('/admin/playlists/suppr/{id}', name: 'admin.playlists.suppr', methods: ['GET','POST'])]
     public function supprimerPlaylist(int $id, Request $request): Response
     {
-        $playlist = $this->playlistRepository->find($id);
         $this->addFlash("sucess","OK");
+        $playlist = $this->playlistRepository->find($id);
 
 
         if (!$playlist) {
@@ -415,6 +420,55 @@ class adminBackController extends AbstractController
 
         return $this->redirectToRoute('admin.playlists');
     }
+
+
+
+
+
+    #[Route('/admin/playlists/tri/{champ}/{ordre}', name: 'admin.playlists.sort')]
+    public function playlists_sort($champ, $ordre): Response{
+        switch($champ){
+            case "name":
+                $playlists = $this->playlistRepository->findAllOrderByName($ordre);
+                break;
+            case "formations":
+                $playlists = $this->playlistRepository->findAllOrderByFormation($ordre);
+            default:
+                $playlists = $this->playlistRepository->findAllOrderByName("ASC");
+                break;
+        }
+        $categories = $this->categorieRepository->findAll();
+        return $this->render($this->PLAYLISTS_TWIG_PATH, [
+            'playlists' => $playlists,
+            'categories' => $categories            
+        ]);
+    }          
+
+    #[Route('/admin/playlists/recherche/{champ}/{table}', name: 'admin.playlists.findallcontain')]
+    public function playlists_findAllContain($champ, Request $request, $table=""): Response{
+        $valeur = $request->get("recherche");
+        $playlists = $this->playlistRepository->findByContainValue($champ, $valeur, $table);
+        $categories = $this->categorieRepository->findAll();
+        return $this->render($this->PLAYLISTS_TWIG_PATH, [
+            'playlists' => $playlists,
+            'categories' => $categories,            
+            'valeur' => $valeur,
+            'table' => $table
+        ]);
+    }  
+
+    #[Route('/admin/playlists/playlist/{id}', name: 'admin.playlists.showone')]
+    public function playlists_showOne($id): Response{
+        $playlist = $this->playlistRepository->find($id);
+        $playlistCategories = $this->categorieRepository->findAllForOnePlaylist($id);
+        $playlistFormations = $this->formationRepository->findAllForOnePlaylist($id);
+        return $this->render("pages/playlist.html.twig", [
+            'playlist' => $playlist,
+            'playlistcategories' => $playlistCategories,
+            'playlistformations' => $playlistFormations
+        ]);        
+    }       
+
 
 
 

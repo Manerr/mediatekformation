@@ -56,7 +56,7 @@ class PlaylistRepository extends ServiceEntityRepository
                 ->getResult();
     } 
 
-    /**
+/**
      * Retourne toutes les playlists triées sur le nombre de formations 
      * @param type $champ
      * @param type $ordre
