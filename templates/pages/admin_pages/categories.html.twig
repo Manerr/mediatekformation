@@ -1,8 +1,8 @@
-{% extends "basefront.html.twig" %}
+{% extends "adminbase.html.twig" %}
 {% block body %}
 
     <div class="container m-auto">
-        {% for label, flashes in app.session.flashbag.all %}
+        {% for label, flashes in app.flashes %}
             {% for flash in flashes %}
                 {% if ( label == 'success' ) %}
                     <div class="alert alert-success alert-dismissible fade show">
@@ -18,18 +18,18 @@
 
     </div>
 
+
+    <form action="{{path('admin.nouvelle_categorie')}}" method="post" class="d-flex justify-content-end w-100 p-3" onsubmit="return (function(){let nom = prompt('Nom de la categorie: ');if (nom === null || nom.trim() === '') return false; document.getElementById('nom_nouvelle_categorie').value = nom;return true;})()">
+        <input type="hidden" name="_token" value="{{ csrf_token('nouvelle_categorie') }}"/>
+        <input type="hidden" id="nom_nouvelle_categorie" name="nom_nouvelle_categorie" value=""/>
+        <button type="submit" class="btn btn-primary m-1 ms-auto">Nouvelle catégorie</button>
+    </form>
+
+
+    <input type="hidden" name="csrf_modification" value="{{ csrf_token('modifier_categorie') }}"/>
     <table class="table table-striped">
         <caption>Tableau des Categories</caption>
         <tbody>
-                <tr class="align-middle">
-                    <td colspan="3">
-                        <form action="{{path('admin.nouvelle_categorie')}}" method="post" class="d-flex" onsubmit="return function(){nom = prompt('Nouveau nom');document.getElementById('nom_nouvelle_categorie').value = nom;return nom.length > 0;}()">
-                            <input type="hidden" name="_token" value="{{ csrf_token('nouvelle_categorie') }}"/>
-                            <input type="hidden" id="nom_nouvelle_categorie" name="nom_nouvelle_categorie" value=""/>
-                            <button type="submit" class="btn btn-primary m-1 ms-auto">Nouvelle catégorie</button>
-                        </form>
-                    </td>
-                </tr>            
             {% for categorie in categories %}
                 <tr class="align-middle">
                     <td>
@@ -40,7 +40,11 @@
                     {% if controller_name|default == 'adminBackController' %}
                         <td>
                             <div class="ms-auto d-flex flex-row justify-content-end mt-2">
-                                <a href="" class="btn btn-secondary m-1">Modifier</a>
+                            <form action="{{path('admin.modifier_categorie',{id:categorie.id}) }}" method="post" onsubmit="return (function(){let nom = prompt('Nom de la categorie: ');if (nom === null || nom.trim() === '') return false; document.getElementById('nom_categorie_{{categorie.id}}').value = nom;return true;})()" >
+                                <input type="hidden" id="nom_categorie_{{categorie.id}}" name="nom_categorie"/>
+                                <input type="hidden" id="_token" name="_token" value="{{ csrf_token('modifier_categorie_' ~ categorie.id) }}"/>
+                                <button href="#" type="submit" class="btn btn-secondary m-1">Modifier</button>
+                            </form>
                                 <form action="{{ path('admin.categories.suppr',{id:categorie.id}) }}" method="post" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer la categorie {{ categorie.name }} ?')">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete_categorie_' ~ categorie.id) }}">
                                     <button type="submit" class="btn btn-danger m-1">Supprimer</button>
@@ -53,6 +57,8 @@
             {% endfor %}
         </tbody>
     </table>
+
+
     <script type="text/javascript" defer="defer">
         document.onload = function(){
 

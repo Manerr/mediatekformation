@@ -2,20 +2,19 @@
 {% block body %}
 
     <div class="container m-auto">
-        {% for label, flashes in app.session.flashbag.all %}
-            {% for flash in flashes %}
-                {% if ( label == 'success' ) %}
-                    <div class="alert alert-success alert-dismissible fade show">
-                        {{ flash }}
-                    </div>
-                {% elseif ( label == 'error' ) %}
-                    <div class="alert alert-danger alert-dismissible fade show">
-                        {{ flash }}
-                    </div>
-                {% endif %}
-            {% endfor %}
-        {% endfor %}
-
+{% for label, flashes in app.session.flashbag.all %}
+    {% for flash in flashes %}
+        {% if ( label == 'success' ) %}
+            <div class="alert alert-success alert-dismissible fade show">
+                {{ flash }}
+            </div>
+        {% elseif ( label == 'error' ) %}
+            <div class="alert alert-danger alert-dismissible fade show">
+                {{ flash }}
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endfor %}
     </div>
 
     <table class="table table-striped">
@@ -117,6 +116,7 @@
                             <div class="d-flex flex-row justify-content-center mt-2">
                                 <a href="{{ path('admin.formations.showone', {id:formation.id}) }}" class="btn btn-secondary m-1">Modifier</a>
                                 <form action="{{ path('admin.formations.suppr', {id: formation.id}) }}" method="post" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer la formation {{ formation.title }} ?')">
+                                    
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete_formation_' ~ formation.id) }}">
                                     <button type="submit" class="btn btn-danger m-1">Supprimer</button>
                                 </form>

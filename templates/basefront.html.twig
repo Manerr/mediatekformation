@@ -36,7 +36,7 @@
                     <li class="nav-item">
                         
                         {% if controller_name|default == 'adminBackController' %}
-                        <a class="nav-link" href="{{ path('playlists') }}">Playlists</a>
+                        <a class="nav-link" href="{{ path('admin.playlists') }}">Playlists</a>
                         {% else %}
                         <a class="nav-link" href="{{ path('playlists') }}">Playlists</a>
                         {% endif %}
@@ -59,7 +59,26 @@
             </div>
         </nav>        
     </div>
+
+    
+    <div class="container m-auto">
+{% for label, flashes in app.flashes %}
+    {% for flash in flashes %}
+        {% if ( label == 'success' ) %}
+            <div class="alert alert-success alert-dismissible fade show">
+                {{ flash }}
+            </div>
+        {% elseif ( label == 'error' ) %}
+            <div class="alert alert-danger alert-dismissible fade show">
+                {{ flash }}
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endfor %}
+    </div>
+
 {% endblock %}
+
 {% block body %}{% endblock %}
 {% block footer %}
     <div class="container text-center">

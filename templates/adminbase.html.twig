@@ -17,8 +17,8 @@
 	             <a class="nav-link" href="{{ path('admin.formations') }}">Formations</a>
 	         </li>
 	         <li class="nav-item">
-	             <a class="nav-link" href="{{ path('playlists') }}">Playlists</a>
-	         </li>    
+	             <a class="nav-link" href="{{ path('admin.playlists') }}">Playlists</a>
+	         </li>   
 	         <li class="nav-item">
 	             <a class="nav-link" href="{{ path('admin.categories') }}">Categories</a>
 	         </li>
@@ -31,5 +31,23 @@
 	 </div>
 	</nav>        
 </div>
+<div class="container m-auto">
+
+  {% for label, flashes in app.session.flashbag.all %}
+      {% for flash in flashes %}
+          {% if ( label == 'success' ) %}
+              <div class="alert alert-success alert-dismissible fade show">
+                  {{ flash }}
+              </div>
+          {% elseif ( label == 'error' ) %}
+              <div class="alert alert-danger alert-dismissible fade show">
+                  {{ flash }}
+              </div>
+          {% endif %}
+      {% endfor %}
+  {% endfor %}
+
+</div>
+
 {% endblock %}
 

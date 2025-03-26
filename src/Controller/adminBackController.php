@@ -50,6 +50,7 @@ class adminBackController extends AbstractController
         $this->FORMATIONS_TWIG_PATH = "pages/formations.html.twig";
         $this->CATEGORIES_TWIG_PATH = "pages/admin_pages/categories.html.twig";
         $this->FORMATION_TWIG_PATH = "pages/admin_pages/admin_formation.html.twig";
+        $this->PLAYLISTS_TWIG_PATH = "pages/admin_pages/playlists.html.twig";
         $this->ADMIN_ACCUEIL_TWIG_PATH = "adminbase.html.twig";
         $this->CONTROLLER_NAME = "adminBackController";
     }
@@ -88,11 +89,25 @@ class adminBackController extends AbstractController
         $formations = $this->formationRepository->findAll();
         $categories = $this->categorieRepository->findAll();
         return $this->render($this->CATEGORIES_TWIG_PATH, [
+            'categories' => $categories,
             'formations' => $formations,
+            'controller_name' => $this->CONTROLLER_NAME
+        ]);
+    }
+
+
+    #[Route('/admin/playlists', name: 'admin.playlists')]
+    public function playlists_page(): Response
+    {       
+        $playlists = $this->playlistRepository->findAll();
+        $categories = $this->categorieRepository->findAll();
+        return $this->render($this->PLAYLISTS_TWIG_PATH, [
+            'playlists' => $playlists,
             'categories' => $categories,
             'controller_name' => $this->CONTROLLER_NAME
         ]);
     }
+
 
     #[Route('/admin/nouvelle_categorie', name: 'admin.nouvelle_categorie')]
     public function nouvelleCategorie(Request $request): Response
@@ -117,6 +132,41 @@ class adminBackController extends AbstractController
         return $this->redirectToRoute('admin.categories');
     }
 
+    #[Route('/admin/modifier_categorie/{id}', name: 'admin.modifier_categorie')]
+    public function modifierCategorie(Request $request,int $id): Response
+    {
+
+
+        $categories = $this->categorieRepository;
+        $name = $request->get("nom_categorie");
+
+        if( strlen($name) == 0 || is_null($id) ) return $this->redirectToRoute('admin.categories');
+
+ 
+        // Vérification du token CSRF
+        if (!$this->isCsrfTokenValid('modifier_categorie_'.$id, $request->request->get('_token'))) {
+
+            $this->addFlash('danger', 'Token CSRF invalide.');
+            return $this->redirectToRoute('admin.categories');
+        }
+
+        $this->categorie = $this->categorieRepository->findOneBy(['id' => $id]);
+
+
+        // Vérification de l'id
+        if ( !$this->categorie ) {
+            return $this->redirectToRoute('admin.categories');
+        }
+
+        $this->categorie->setName($name);
+
+
+        $this->categorieRepository->add($this->categorie);
+
+        $this->addFlash('success', 'Catégorie modifiée avec succès.');
+
+        return $this->redirectToRoute('admin.categories');
+    }
 
     
     #[Route('/admin/tri/{champ}/{ordre}/{table}', name: 'formations.sort')]
@@ -236,31 +286,55 @@ class adminBackController extends AbstractController
     // }   
 
 
-#[Route('/admin/ajouter_formation/nouvelle_formation', name: 'admin.creer_save_formations', methods: ['POST'])]
-public function saveAjouterFormation(Request $request, FormationService $formationService): Response
-{
-    $parametres = [
-        "date" => $request->get("date"),
-        "titre" => $request->get("formation_title"),
-        "id" => $request->get("formation_id"),
-        "description" => $request->get("formation_description", ""),
-        "playlist" => $request->get("playlist_formation", ""),
-        "url" => $request->get("formation_videoid", ""),
-        "categories" => $request->get("formation_categories", [])
-    ];
+    #[Route('/admin/ajouter_formation/nouvelle_formation', name: 'admin.creer_save_formations', methods: ['POST'])]
+    public function saveAjouterFormation(Request $request, FormationService $formationService): Response
+    {
+        $parametres = [
+            "date" => $request->get("date"),
+            "titre" => $request->get("formation_title"),
+            "id" => $request->get("formation_id"),
+            "description" => $request->get("formation_description", ""),
+            "playlist" => $request->get("playlist_formation", ""),
+            "url" => $request->get("formation_videoid", ""),
+            "categories" => $request->get("formation_categories", [])
+        ];
 
-    if (!$parametres["id"]) {
-        if (!$this->isCsrfTokenValid('enregistrer_formation', $request->request->get('_token'))) {
-            $this->addFlash('danger', 'Token CSRF invalide.');
-        return $this->redirectToRoute('admin.formations');
+        if (!$parametres["id"]) {
+            if (!$this->isCsrfTokenValid('enregistrer_formation', $request->request->get('_token'))) {
+                $this->addFlash('danger', 'Token CSRF invalide.');
+            return $this->redirectToRoute('admin.formations');
+            }
+            $formationService->saveFormation($parametres);
+        } else {
+            $this->addFlash('error', 'La formation n\'a pas pu être créée.');
         }
-        $formationService->saveFormation($parametres);
-    } else {
-        $this->addFlash('error', 'La formation n\'a pas pu être créée.');
+
+        return $this->redirectToRoute('admin.formations');
     }
 
-    return $this->redirectToRoute('admin.formations');
-}
+    #[Route('/admin/playlists/nouvelle_playlist/', name: 'admin.nouvelle_playlist', methods: ['POST'])]
+    public function nouvellePlaylist(Request $request): Response
+    {
+       
+        $nom = $request->get("nom_nouvelle_playlist");
+
+        if ($nom) {
+            if (!$this->isCsrfTokenValid('nouvelle_playlist_token', $request->request->get('_token'))) {
+                $this->addFlash('danger', 'Token CSRF invalide.');
+            return $this->redirectToRoute('admin.playlists');
+            }
+
+            $this->addFlash('success', 'Playlist ajoutée avec succès.');
+
+        } else {
+            $this->addFlash('error', 'La playlist n\'a pas pu être créée.');
+        }
+
+        return $this->redirectToRoute('admin.playlists');
+    }
+
+
+
 
 
 
@@ -295,7 +369,7 @@ public function saveAjouterFormation(Request $request, FormationService $formati
         $categorie = $this->categorieRepository->find($id);
 
         if (!$categorie) {
-            $this->addFlash('danger', 'Formation non trouvée.');
+            $this->addFlash('danger', 'Catégorie non trouvée.');
             return $this->redirectToRoute('admin.categories');
         }
 
@@ -311,6 +385,38 @@ public function saveAjouterFormation(Request $request, FormationService $formati
 
         return $this->redirectToRoute('admin.categories');
     }
+
+    #[Route('/admin/playlists/suppr/{id}', name: 'admin.playlists.suppr', methods: ['GET','POST'])]
+    public function supprimerPlaylist(int $id, Request $request): Response
+    {
+        $playlist = $this->playlistRepository->find($id);
+        $this->addFlash("sucess","OK");
+
+
+        if (!$playlist) {
+            $this->addFlash('danger', 'PLaylist non trouvée.');
+            return $this->redirectToRoute('admin.playlists');
+        }
+
+        // Vérification du token CSRF
+        if (!$this->isCsrfTokenValid('delete_playlist_' . $id, $request->request->get('_token'))) {
+            $this->addFlash('danger', 'Token CSRF invalide.');
+            return $this->redirectToRoute('admin.playlists');
+        }
+
+
+        $formations_concernees = $this->formationRepository->findAllForOnePlaylist($playlist);
+        if (count($formations_concernees) > 0) {
+            $this->addFlash('danger', 'Impossible de supprimer une playlist contenant des formations');
+        } else {
+            $this->playlistRepository->remove($playlist);
+            $this->addFlash('success', 'Playlist supprimée avec succès.');
+        }
+
+        return $this->redirectToRoute('admin.playlists');
+    }
+
+
 
 
 

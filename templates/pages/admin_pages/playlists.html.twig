@@ -1,0 +1,115 @@
+{% extends "adminbase.html.twig" %}
+{% block body %}
+    <div class="container m-auto">
+{% for label, flashes in app.session.flashbag.all %}
+    {% for flash in flashes %}
+        {% if ( label == 'success' ) %}
+            <div class="alert alert-success alert-dismissible fade show">
+                {{ flash }}
+            </div>
+        {% elseif ( label == 'error' ) %}
+            <div class="alert alert-danger alert-dismissible fade show">
+                {{ flash }}
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endfor %}
+    </div>
+    <table class="table table-striped">
+        <caption>Playlists disponibles</caption>
+        <thead>
+            <tr>
+                <th class="text-left align-top" scope="col">
+                    playlist<br />
+                    <a href="{{ path('playlists.sort', {champ:'name', ordre:'ASC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true"><</a>
+                    <a href="{{ path('playlists.sort', {champ:'name', ordre:'DESC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true">></a>
+                    <form class="form-inline mt-1" method="POST" action="{{ path('playlists.findallcontain', {champ:'name'}) }}">
+                        <div class="form-group mr-1 mb-2">
+                            <input type="text" class="sm" name="recherche" 
+                                   value="{% if valeur|default and not table|default %}{{ valeur }}{% endif %}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('filtre_name') }}">
+                            <button type="submit" class="btn btn-info mb-2 btn-sm">filtrer</button>
+                        </div>
+                    </form>                    
+                </th>
+                <th class="text-left align-top" scope="col">
+                    catégories
+                    <form class="form-inline mt-1" method="POST" action="{{ path('playlists.findallcontain', {champ:'id', table:'categories'}) }}">
+                        <select class="form-select form-select-sm" name="recherche" id="recherche" onchange="this.form.submit()">
+                            <option value=""></option>
+                            {% for categorie in categories %}
+                                <option 
+                                    {% if valeur|default and valeur==categorie.id %} 
+                                        selected
+                                    {% endif %} 
+                                    value="{{ categorie.id }}">{{ categorie.name }}
+                                </option>
+                            {% endfor %}
+                        </select>                    
+                    </form>            
+                </th>
+                <th class="text-center align-top" scope="col">
+                    &nbsp;
+                </th>               
+                <th class="text-center align-top" scope="col">
+                    Formations
+                    <div>
+                        <a href="{{ path('playlists.sort', {champ:'formations', ordre:'ASC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true">&lt;</a>
+                        <a href="{{ path('playlists.sort', {champ:'formations', ordre:'DESC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true">&gt;</a>
+                    </div>
+                </th>               
+                <th class="align-middle">
+                    <div>
+                        <form action="{{path('admin.nouvelle_playlist')}}" method="post" class="d-flex justify-content-end w-100" onsubmit="return (function(){let nom = prompt('Nouveau nom');if (nom === null || nom.trim() === '') return false; document.getElementById('nom_nouvelle_playlist').value = nom;return true;})()">
+                            <input type="hidden" name="_token" value="{{ csrf_token('nouvelle_playlist_token') }}"/>
+                            <input type="hidden" id="nom_nouvelle_playlist" name="nom_nouvelle_playlist" value=""/>
+                            <button type="submit" class="btn btn-primary m-1 ms-auto">Nouvelle playlist</button>
+                        </form>
+
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- boucle sur les playlists -->
+            {% if playlists|length > 0 %}
+                {% for k in 0..playlists|length-1 %}
+                    <tr class="align-middle">
+                        <td>
+                            <h5 class="text-info">
+                                {{ playlists[k].name }}
+                            </h5>
+                        </td>                 
+                        <td class="text-left">
+                            {% set categories = playlists[k].categoriesplaylist %}
+                            {% if categories|length > 0  %}
+                                {% for c in 0..categories|length-1 %}
+                                    &nbsp;{{ categories[c] }}                                  
+                                {% endfor %}
+                            {% endif %}
+                        </td>            					
+                        <td class="text-center">
+                            <a href="{{ path('playlists.showone', {id:playlists[k].id}) }}" class="btn btn-secondary">Voir détail</a>
+                        </td>
+                        <td>
+                            <span class="align-middle">{{ playlists[k].formations|length}} formations</span>
+                        </td>
+                        <td>
+                            <div class="ms-auto d-flex flex-row justify-content-end mt-2">
+                            <form action="" method="post" onsubmit="return function(){nom = prompt('Nom de la playlist');this.children[0].value = nom;console.log(this.children[0]);return nom.length > 0;}()" >
+                                <input type="hidden" id="nom_playlist" name="nom_playlist"/>
+                                <button href="#" type="submit" class="btn btn-secondary m-1">Modifier</button>
+                            </form>
+                                <form action="{{ path('admin.playlists.suppr', {id:playlists[k].id}) }}" method="post" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer la playlist {{ playlists[k].name }} ?')">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete_playlist_' ~ playlists[k].id) }}">
+                                    <button type="submit" class="btn btn-danger m-1">Supprimer</button>
+                                </form>
+                            </div>                        
+                        </td>
+
+                    </tr>
+                {% endfor %}	
+            {% endif %}
+        </tbody>
+    </table>
+{% endblock %}
