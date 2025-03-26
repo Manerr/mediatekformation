@@ -41,7 +41,7 @@ class PlaylistsController extends AbstractController {
         $this->playlistRepository = $playlistRepository;
         $this->categorieRepository = $categorieRepository;
         $this->formationRepository = $formationRespository;
-        $this->PLAYLISTS_TWIG_PATH = "pages/admin_pages/playlists.html.twig";
+        $this->PLAYLISTS_TWIG_PATH = "pages/playlists.html.twig";
     }
     
     /**

@@ -133,6 +133,9 @@ class adminBackController extends AbstractController
         return $this->redirectToRoute('admin.categories');
     }
 
+
+
+
     #[Route('/admin/modifier_categorie/{id}', name: 'admin.modifier_categorie')]
     public function modifierCategorie(Request $request,int $id): Response
     {
@@ -313,14 +316,14 @@ class adminBackController extends AbstractController
         return $this->redirectToRoute('admin.formations');
     }
 
-    #[Route('/admin/playlists/nouvelle_playlist/', name: 'admin.nouvelle_playlist', methods: ['POST'])]
+    #[Route('/admin/playlists/nouvelle_playlist/', name: 'admin.playlists.nouvelle', methods: ['POST'])]
     public function nouvellePlaylist(Request $request): Response
     {
        
-        $nom = $request->get("nom_nouvelle_playlist");
+        $nom = $request->get("name");
 
         if ($nom) {
-            if (!$this->isCsrfTokenValid('nouvelle_playlist_token', $request->request->get('_token'))) {
+            if (!$this->isCsrfTokenValid('nouvelle_playlist', $request->request->get('_token'))) {
                 $this->addFlash('danger', 'Token CSRF invalide.');
             return $this->redirectToRoute('admin.playlists');
             }
@@ -422,6 +425,49 @@ class adminBackController extends AbstractController
     }
 
 
+    #[Route('/admin/enregistrer_playlist/', name: 'admin.enregistrer_playlist')]
+    public function enregistrerPlaylist(Request $request): Response
+    {
+
+
+
+        var_dump($request->get("nom"));
+        var_dump($request->get("id"));
+        var_dump($request->get("formation_categories", []));
+
+        echo $a;
+
+        // $categories = $this->categorieRepository;
+        // $name = $request->get("nom_categorie");
+
+        // if( strlen($name) == 0 || is_null($id) ) return $this->redirectToRoute('admin.categories');
+
+ 
+        // // Vérification du token CSRF
+        // if (!$this->isCsrfTokenValid('modifier_categorie_'.$id, $request->request->get('_token'))) {
+
+        //     $this->addFlash('danger', 'Token CSRF invalide.');
+        //     return $this->redirectToRoute('admin.categories');
+        // }
+
+        // $this->categorie = $this->categorieRepository->findOneBy(['id' => $id]);
+
+
+        // // Vérification de l'id
+        // if ( !$this->categorie ) {
+        //     return $this->redirectToRoute('admin.categories');
+        // }
+
+        // $this->categorie->setName($name);
+
+
+        // $this->categorieRepository->add($this->categorie);
+
+        $this->addFlash('success', 'Playlist modifiée avec succès.');
+
+        return $this->redirectToRoute('admin.playlists');
+    }
+
 
 
 
@@ -457,18 +503,19 @@ class adminBackController extends AbstractController
         ]);
     }  
 
-    #[Route('/admin/playlists/playlist/{id}', name: 'admin.playlists.showone')]
+    #[Route('/admin/playlists/editer/{id}', name: 'admin.playlists.editer')]
     public function playlists_showOne($id): Response{
         $playlist = $this->playlistRepository->find($id);
+        $playlistToutesCategories = $this->categorieRepository->findAll();
         $playlistCategories = $this->categorieRepository->findAllForOnePlaylist($id);
         $playlistFormations = $this->formationRepository->findAllForOnePlaylist($id);
-        return $this->render("pages/playlist.html.twig", [
+        return $this->render("pages/admin_pages/playlist.html.twig", [
             'playlist' => $playlist,
-            'playlistcategories' => $playlistCategories,
+            'categories' => $playlistCategories,
+            'toutescategories' => $playlistToutesCategories,
             'playlistformations' => $playlistFormations
         ]);        
     }       
-
 
 
 

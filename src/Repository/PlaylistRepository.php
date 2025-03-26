@@ -66,7 +66,7 @@ class PlaylistRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('p')
                 ->leftjoin('p.formations', 'f')
                 ->groupBy('p.id')
-                ->orderBy('COUNT(f)', $ordre)
+                ->orderBy('COUNT(f.id)', $ordre)
                 ->getQuery()
                 ->getResult();
     }

@@ -60,9 +60,9 @@
                 </th>               
                 <th class="align-middle">
                     <div>
-                        <form action="{{path('admin.nouvelle_playlist')}}" method="post" class="d-flex justify-content-end w-100" onsubmit="return (function(){let nom = prompt('Nouveau nom');if (nom === null || nom.trim() === '') return false; document.getElementById('nom_nouvelle_playlist').value = nom;return true;})()">
+                        <!-- Null pour nouvelle playlist: -->
+                        <form action="{{ path('admin.playlists.editer', {id:'null'}) }}" method="post" class="d-flex justify-content-end w-100">
                             <input type="hidden" name="_token" value="{{ csrf_token('nouvelle_playlist_token') }}"/>
-                            <input type="hidden" id="nom_nouvelle_playlist" name="nom_nouvelle_playlist" value=""/>
                             <button type="submit" class="btn btn-primary m-1 ms-auto">Nouvelle playlist</button>
                         </form>
 
@@ -89,17 +89,13 @@
                             {% endif %}
                         </td>            					
                         <td class="text-center">
-                            <a href="{{ path('playlists.showone', {id:playlists[k].id}) }}" class="btn btn-secondary">Voir détail</a>
                         </td>
                         <td>
                             <span class="align-middle">{{ playlists[k].formations|length}} formations</span>
                         </td>
                         <td>
                             <div class="ms-auto d-flex flex-row justify-content-end mt-2">
-                            <form action="" method="post" onsubmit="return function(){nom = prompt('Nom de la playlist');this.children[0].value = nom;console.log(this.children[0]);return nom.length > 0;}()" >
-                                <input type="hidden" id="nom_playlist" name="nom_playlist"/>
-                                <button href="#" type="submit" class="btn btn-secondary m-1">Modifier</button>
-                            </form>
+                            <a href="{{ path('admin.playlists.editer', {id:playlists[k].id}) }}" class="btn btn-secondary m-1">Modifier</a>
                                 <form action="{{ path('admin.playlists.suppr', {id:playlists[k].id}) }}" method="post" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer la playlist {{ playlists[k].name }} ?')">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete_playlist_' ~ playlists[k].id) }}">
                                     <button type="submit" class="btn btn-danger m-1">Supprimer</button>
