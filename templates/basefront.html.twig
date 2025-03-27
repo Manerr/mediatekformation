@@ -68,7 +68,7 @@
             <div class="alert alert-success alert-dismissible fade show">
                 {{ flash }}
             </div>
-        {% elseif ( label == 'error' ) %}
+        {% elseif ( label == 'error' or label == 'danger' ) %}
             <div class="alert alert-danger alert-dismissible fade show">
                 {{ flash }}
             </div>

@@ -1,6 +1,9 @@
 {% extends "adminbase.html.twig" %}
 {% block body %}
 <style type="text/css">
+select{
+    resize: both;
+}
 select option:checked {
   background-color: #3975ff !important;
   color: white!important;
@@ -10,16 +13,20 @@ select option:checked {
 
 
 
-{% if playlist is defined and playlist.id is defined %}
+        
+    {% if playlist is defined and playlist.id is defined %}
         <form action="{{ path('admin.playlists.suppr', {id:playlist.id}) }}" method="post" class="d-flex" style="flex-direction: column" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer la playlist {{ playlist.name }} ?')">
-            <a href="{{ path('admin.enregistrer_playlist', {id:playlist.id}) }}" class="btn btn-primary m-4 ms-auto">Enregistrer</a>
             <input type="hidden" name="_token" value="{{ csrf_token('delete_playlist_' ~ playlist.id) }}">
             <button type="submit" class="btn btn-danger m-4 mt-0 ms-auto">Supprimer</button>
+        </form>
+
+        <form action="{{ path('admin.enregistrer_playlist', {id:playlist.id}) }}" method="post" class="d-flex" style="flex-direction: column">
+            <input type="hidden" name="_token" value="{{ csrf_token('playlist_token_' ~ playlist.id) }}">
     {% else %}
-        <form action="{{ path('admin.enregistrer_playlist') }}" method="post" class="d-flex" style="flex-direction: column">
-            <input type="hidden" name="_token" value="{{ csrf_token('nouvelle_playlist') }}">
-            <button type="submit" class="btn btn-primary m-4 ms-auto">Enregistrer</button>
+        <form action="{{ path('admin.enregistrer_playlist', {id:null}) }}" method="post" class="d-flex" style="flex-direction: column">
+            <input type="hidden" name="_token" value="{{ csrf_token('playlist_token_') }}">
     {% endif %}
+            <button type="submit" class="btn btn-primary m-4 ms-auto">Enregistrer</button>
 
     <div class="row mt-3">
 
@@ -35,7 +42,7 @@ select option:checked {
                        
             {% if playlist.id is defined %}
                 {% set selectedCategoryIds = categories|map(categories => categories.id) %}
-                <select name="formation_categories[]" class="form-select" multiple>
+                <select name="playlist_categorie[]" class="form-select" multiple>
                     {% for categorie in toutescategories %}
                         <option value="{{ categorie.name }}" 
                             {% if categorie.id in selectedCategoryIds %}selected{% endif %}>a
@@ -44,7 +51,7 @@ select option:checked {
                     {% endfor %}
                 </select>
             {% else %}
-                <select name="formation_categories[]" class="form-select" multiple>
+                <select name="playlist_categorie[]" class="form-select" multiple>
                     {% for categorie in toutescategories %}
                         <option value="{{ categorie.name }}">{{ categorie.name }}</option>
                     {% endfor %}
@@ -68,23 +75,33 @@ select option:checked {
 
 
             <!-- boucle sur l'affichage des formations -->
-            {% for formation in playlistformations %}
-                <div class="row mt-1">
-                    <div class="col-md-auto">
-                        {% if formation.miniature %}
-                            <a href="{{ path('formations.showone', {id:formation.id}) }}">
-                                <img src="{{ formation.miniature }}" alt="miniature de la formation">
-                            </a>
-                        {% endif %}  
+
+            <select name="formations_id[]" class="form-select" multiple>
+
+                {% for formation in toutesformations %}
+
+                <option value="{{formation.id}}" {% if formation in playlistformations %}selected{% endif %}>
+                    <div class="row mt-1">
+                        <div class="col-md-auto">
+                            {% if formation.miniature %}
+                                <a href="{{ path('admin.formations.showone', {id:formation.id}) }}">
+                                    <img src="{{ formation.miniature }}" alt="miniature de la formation">
+                                </a>
+                            {% endif %}  
+                        </div>
+                        <div class="col d-flex align-items-center">
+                            <a href="{{ path('admin.formations.showone', {id:formation.id}) }}" 
+                               class="link-secondary text-decoration-none">
+                                {{ formation.title }}
+                            </a>          
+                        </div>
                     </div>
-                    <div class="col d-flex align-items-center">
-                        <a href="{{ path('formations.showone', {id:formation.id}) }}" 
-                           class="link-secondary text-decoration-none">
-                            {{ formation.title }}
-                        </a>          
-                    </div>
-                </div>
-            {% endfor %}
+
+                </option>
+                {% endfor %}
+                
+            </select>
+
         </div>
         
     </div>

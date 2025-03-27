@@ -31,23 +31,21 @@
 	 </div>
 	</nav>        
 </div>
-<div class="container m-auto">
-
-  {% for label, flashes in app.session.flashbag.all %}
-      {% for flash in flashes %}
-          {% if ( label == 'success' ) %}
-              <div class="alert alert-success alert-dismissible fade show">
-                  {{ flash }}
-              </div>
-          {% elseif ( label == 'error' ) %}
-              <div class="alert alert-danger alert-dismissible fade show">
-                  {{ flash }}
-              </div>
-          {% endif %}
-      {% endfor %}
-  {% endfor %}
-
-</div>
+    <div class="container m-auto">
+{% for label, flashes in app.flashes %}
+    {% for flash in flashes %}
+        {% if ( label == 'success' or label == 'sucess' ) %}
+            <div class="alert alert-success alert-dismissible fade show">
+                {{ flash }}
+            </div>
+        {% elseif ( label == 'error' or label == 'danger' ) %}
+            <div class="alert alert-danger alert-dismissible fade show">
+                {{ flash }}
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endfor %}
+    </div>
 
 {% endblock %}
 

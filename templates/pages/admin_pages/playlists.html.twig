@@ -1,20 +1,6 @@
 {% extends "adminbase.html.twig" %}
 {% block body %}
-    <div class="container m-auto">
-{% for label, flashes in app.session.flashbag.all %}
-    {% for flash in flashes %}
-        {% if ( label == 'success' ) %}
-            <div class="alert alert-success alert-dismissible fade show">
-                {{ flash }}
-            </div>
-        {% elseif ( label == 'error' ) %}
-            <div class="alert alert-danger alert-dismissible fade show">
-                {{ flash }}
-            </div>
-        {% endif %}
-    {% endfor %}
-{% endfor %}
-    </div>
+    
     <table class="table table-striped">
         <caption>Playlists disponibles</caption>
         <thead>

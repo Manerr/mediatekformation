@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use DateTime;
 use App\Service\FormationService;
+use App\Service\PlaylistService;
 
 use App\Entity\Categorie;
 use App\Entity\Playlist;
@@ -397,7 +398,6 @@ class adminBackController extends AbstractController
     #[Route('/admin/playlists/suppr/{id}', name: 'admin.playlists.suppr', methods: ['GET','POST'])]
     public function supprimerPlaylist(int $id, Request $request): Response
     {
-        $this->addFlash("sucess","OK");
         $playlist = $this->playlistRepository->find($id);
 
 
@@ -426,16 +426,67 @@ class adminBackController extends AbstractController
 
 
     #[Route('/admin/enregistrer_playlist/', name: 'admin.enregistrer_playlist')]
-    public function enregistrerPlaylist(Request $request): Response
+    public function enregistrerPlaylist(Request $request, PlaylistService $playlistservice): Response
     {
 
 
+        $nom = $request->get("nom");
+        $id = $request->get("id");
+        $categories = $request->get("playlist_categorie", []);
+        $description = $request->get("description");
+        $token = $request->get("_token");
+        $formations_id = $request->get("formations_id",[]);
 
-        var_dump($request->get("nom"));
-        var_dump($request->get("id"));
-        var_dump($request->get("formation_categories", []));
+        $params = [
+            "nom" => $nom,
+            "id" => $id,
+            "categories" => $categories,
+            "description" => $description,
+            "formations_id" => $formations_id
+        ];
 
-        echo $a;
+        echo $token;
+
+        //Création 
+
+        if($id == null){
+
+            if (!$this->isCsrfTokenValid('playlist_token_',$token)) {
+
+                $this->addFlash('danger', 'Token CSRF invalide.');
+                return $this->redirectToRoute('admin.playlists');
+            }
+            //Ajout
+            else{
+
+                $this->addFlash('sucess', 'Playlist ajoutée.');
+                $playlistservice->savePlaylist($params);
+                return $this->redirectToRoute('admin.playlists');
+            }
+
+        }
+        else{
+
+
+            if (!$this->isCsrfTokenValid('playlist_token_'.$id,$token)) {
+        // echo $a;
+
+                $this->addFlash('danger', 'Token CSRF invalide.');
+                return $this->redirectToRoute('admin.playlists');
+            }
+            //Edit
+            else{
+
+                $this->addFlash('success', 'Playlist modifiée avec succès.');
+                $playlistservice->updatePlaylist($id,$params);
+                
+                return $this->redirectToRoute('admin.playlists');
+            }
+
+        }
+
+        //Modification
+
 
         // $categories = $this->categorieRepository;
         // $name = $request->get("nom_categorie");
@@ -462,8 +513,8 @@ class adminBackController extends AbstractController
 
 
         // $this->categorieRepository->add($this->categorie);
+        $this->addFlash('error', 'Ajout Impossible');
 
-        $this->addFlash('success', 'Playlist modifiée avec succès.');
 
         return $this->redirectToRoute('admin.playlists');
     }
@@ -509,11 +560,13 @@ class adminBackController extends AbstractController
         $playlistToutesCategories = $this->categorieRepository->findAll();
         $playlistCategories = $this->categorieRepository->findAllForOnePlaylist($id);
         $playlistFormations = $this->formationRepository->findAllForOnePlaylist($id);
+        $toutesFormations = $this->formationRepository->findAll();
         return $this->render("pages/admin_pages/playlist.html.twig", [
             'playlist' => $playlist,
             'categories' => $playlistCategories,
             'toutescategories' => $playlistToutesCategories,
-            'playlistformations' => $playlistFormations
+            'playlistformations' => $playlistFormations,
+            'toutesformations' => $toutesFormations
         ]);        
     }       
 
