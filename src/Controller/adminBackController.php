@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+use Doctrine\ORM\EntityManagerInterface;
+
 class adminBackController extends AbstractController
 {
 
@@ -26,6 +28,8 @@ class adminBackController extends AbstractController
       * @var FormationRepository
       */
     private $formationRepository;
+
+    private $entityManager;
  
      /**
       * 
@@ -45,7 +49,7 @@ class adminBackController extends AbstractController
     private $FORMATION_TWIG_PATH;
     private $CATEGORIES_TWIG_PATH;
 
-    function __construct(FormationRepository $formationRepository, CategorieRepository $categorieRepository, PlaylistRepository $playlistRepository) {
+    function __construct(FormationRepository $formationRepository, CategorieRepository $categorieRepository, PlaylistRepository $playlistRepository,EntityManagerInterface $entityManager) {
         $this->formationRepository = $formationRepository;
         $this->categorieRepository = $categorieRepository;
         $this->playlistRepository = $playlistRepository;
@@ -55,6 +59,7 @@ class adminBackController extends AbstractController
         $this->PLAYLISTS_TWIG_PATH = "pages/admin_pages/playlists.html.twig";
         $this->ADMIN_ACCUEIL_TWIG_PATH = "adminbase.html.twig";
         $this->CONTROLLER_NAME = "adminBackController";
+        $this->entityManager = $entityManager;
     }
 
 
@@ -426,7 +431,7 @@ class adminBackController extends AbstractController
 
 
     #[Route('/admin/enregistrer_playlist/', name: 'admin.enregistrer_playlist')]
-    public function enregistrerPlaylist(Request $request, PlaylistService $playlistservice): Response
+    public function enregistrerPlaylist(Request $request): Response
     {
 
 
@@ -435,14 +440,11 @@ class adminBackController extends AbstractController
         $categories = $request->get("playlist_categorie", []);
         $description = $request->get("description");
         $token = $request->get("_token");
-        $formations_id = $request->get("formations_id",[]);
 
         $params = [
             "nom" => $nom,
             "id" => $id,
-            "categories" => $categories,
             "description" => $description,
-            "formations_id" => $formations_id
         ];
 
         echo $token;
@@ -460,7 +462,15 @@ class adminBackController extends AbstractController
             else{
 
                 $this->addFlash('sucess', 'Playlist ajoutée.');
-                $playlistservice->savePlaylist($params);
+                $playlist = new Playlist();
+                
+                // Définition des propriétés de base
+                $playlist->setName($params['nom']);
+                $playlist->setDescription($params['description'] ?? '');
+
+                // Enregistrement en base de données
+                $this->entityManager->persist($playlist);
+                $this->entityManager->flush();
                 return $this->redirectToRoute('admin.playlists');
             }
 
@@ -478,7 +488,19 @@ class adminBackController extends AbstractController
             else{
 
                 $this->addFlash('success', 'Playlist modifiée avec succès.');
-                $playlistservice->updatePlaylist($id,$params);
+                $playlist = $this->playlistRepository->find($id);
+
+                if (!$playlist) {
+                    $this->addFlash('danger', 'Modification impossible.');
+                }
+
+                // Mise à jour des propriétés de base
+                $playlist->setName($params['nom']);
+                $playlist->setDescription($params['description'] ?? '');
+
+                // Enregistrement des modifications en base de données
+                $this->entityManager->persist($playlist);
+                $this->entityManager->flush();
                 
                 return $this->redirectToRoute('admin.playlists');
             }
@@ -557,16 +579,12 @@ class adminBackController extends AbstractController
     #[Route('/admin/playlists/editer/{id}', name: 'admin.playlists.editer')]
     public function playlists_showOne($id): Response{
         $playlist = $this->playlistRepository->find($id);
-        $playlistToutesCategories = $this->categorieRepository->findAll();
         $playlistCategories = $this->categorieRepository->findAllForOnePlaylist($id);
         $playlistFormations = $this->formationRepository->findAllForOnePlaylist($id);
-        $toutesFormations = $this->formationRepository->findAll();
         return $this->render("pages/admin_pages/playlist.html.twig", [
             'playlist' => $playlist,
             'categories' => $playlistCategories,
-            'toutescategories' => $playlistToutesCategories,
             'playlistformations' => $playlistFormations,
-            'toutesformations' => $toutesFormations
         ]);        
     }       
 

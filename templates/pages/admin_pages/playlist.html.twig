@@ -37,25 +37,13 @@ select option:checked {
             <input type="text" class="form-control text-info mt-2" style="font-size: 1.5rem;" name="nom" value="{{ playlist.name|default('Nom') }}"/>
             <br /><br />
 
-            <strong>Catégories : </strong>
             <div class="d-inline-block align-top ms-1 mt-2 d-flex">
+            <strong>Catégories : </strong>
                        
             {% if playlist.id is defined %}
-                {% set selectedCategoryIds = categories|map(categories => categories.id) %}
-                <select name="playlist_categorie[]" class="form-select" multiple>
-                    {% for categorie in toutescategories %}
-                        <option value="{{ categorie.name }}" 
-                            {% if categorie.id in selectedCategoryIds %}selected{% endif %}>a
-                            {{ categorie.name }}
-                        </option>
-                    {% endfor %}
-                </select>
-            {% else %}
-                <select name="playlist_categorie[]" class="form-select" multiple>
-                    {% for categorie in toutescategories %}
-                        <option value="{{ categorie.name }}">{{ categorie.name }}</option>
-                    {% endfor %}
-                </select>
+                {% for categorie in categories %}
+                    {{ categorie.name }}
+                {% endfor %}
             {% endif %}
 
 
@@ -76,31 +64,24 @@ select option:checked {
 
             <!-- boucle sur l'affichage des formations -->
 
-            <select name="formations_id[]" class="form-select" multiple>
-
-                {% for formation in toutesformations %}
-
-                <option value="{{formation.id}}" {% if formation in playlistformations %}selected{% endif %}>
-                    <div class="row mt-1">
-                        <div class="col-md-auto">
-                            {% if formation.miniature %}
-                                <a href="{{ path('admin.formations.showone', {id:formation.id}) }}">
-                                    <img src="{{ formation.miniature }}" alt="miniature de la formation">
-                                </a>
-                            {% endif %}  
-                        </div>
-                        <div class="col d-flex align-items-center">
-                            <a href="{{ path('admin.formations.showone', {id:formation.id}) }}" 
-                               class="link-secondary text-decoration-none">
-                                {{ formation.title }}
-                            </a>          
-                        </div>
+            <!-- boucle sur l'affichage des formations -->
+            {% for formation in playlistformations %}
+                <div class="row mt-1">
+                    <div class="col-md-auto">
+                        {% if formation.miniature %}
+                            <a href="{{ path('formations.showone', {id:formation.id}) }}">
+                                <img src="{{ formation.miniature }}" alt="miniature de la formation">
+                            </a>
+                        {% endif %}  
                     </div>
-
-                </option>
-                {% endfor %}
-                
-            </select>
+                    <div class="col d-flex align-items-center">
+                        <a href="{{ path('formations.showone', {id:formation.id}) }}" 
+                           class="link-secondary text-decoration-none">
+                            {{ formation.title }}
+                        </a>          
+                    </div>
+                </div>
+            {% endfor %}
 
         </div>
         
