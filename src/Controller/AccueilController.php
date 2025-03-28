@@ -33,6 +33,16 @@ class AccueilController extends AbstractController{
             'formations' => $formations
         ]); 
     }
+
+    #[Route('/', name: 'default.accueil')]
+    public function def_index(): Response{
+        $formations = $this->repository->findAllLasted(2);
+        return $this->render("pages/accueil.html.twig", [
+            'formations' => $formations
+        ]); 
+    }
+
+
     
     #[Route('/cgu', name: 'cgu')]
     public function cgu(): Response{
