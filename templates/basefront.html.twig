@@ -50,9 +50,18 @@
                     </li>  
                         {% endif %}
 
-                    <li class="nav-item ms-auto">
-                        <a class="nav-link text-black-50" href="{{ path('app_login') }}">Se connecter</a>
-                    </li>                  
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item ms-auto">
+                            <a class="btn btn-primary" href="{{ path('admin.accueil') }}">Back-office</a>
+                        </li>                  
+                        <form class="ms-2" action="{{ path('app_logout') }}" method="post">
+                            <button type="submit" class="btn btn-warning">Déconnexion</button>
+                        </form>             
+                    {% else %}
+                        <li class="nav-item ms-auto">
+                            <a class="btn btn-primary" href="{{ path('app_login') }}">Se connecter</a>
+                        </li>                  
+                    {% endif %}
                 </ul>
             </div>
         </nav>        

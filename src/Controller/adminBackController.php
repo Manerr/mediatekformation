@@ -19,6 +19,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 use Doctrine\ORM\EntityManagerInterface;
 
+
+use Symfony\Component\Security\Core\Security;
+
 class adminBackController extends AbstractController
 {
 
@@ -49,25 +52,50 @@ class adminBackController extends AbstractController
     private $FORMATION_TWIG_PATH;
     private $CATEGORIES_TWIG_PATH;
 
-    function __construct(FormationRepository $formationRepository, CategorieRepository $categorieRepository, PlaylistRepository $playlistRepository,EntityManagerInterface $entityManager) {
+/**
+     * @var Security
+     */
+    private $security;
+
+    // Update the constructor to inject the Security service
+    public function __construct(Security $security, FormationRepository $formationRepository, CategorieRepository $categorieRepository, PlaylistRepository $playlistRepository, EntityManagerInterface $entityManager)
+    {
+        $this->security = $security;
         $this->formationRepository = $formationRepository;
         $this->categorieRepository = $categorieRepository;
         $this->playlistRepository = $playlistRepository;
-        $this->FORMATIONS_TWIG_PATH = "pages/formations.html.twig";
+        $this->FORMATIONS_TWIG_PATH = "pages/admin_pages/formations.html.twig";
         $this->CATEGORIES_TWIG_PATH = "pages/admin_pages/categories.html.twig";
         $this->FORMATION_TWIG_PATH = "pages/admin_pages/admin_formation.html.twig";
         $this->PLAYLISTS_TWIG_PATH = "pages/admin_pages/playlists.html.twig";
-        $this->ADMIN_ACCUEIL_TWIG_PATH = "adminbase.html.twig";
+        $this->ADMIN_ACCUEIL_TWIG_PATH = "pages/admin_pages/admin_accueil.html.twig";
         $this->CONTROLLER_NAME = "adminBackController";
         $this->entityManager = $entityManager;
     }
+
+
+    public function is_admin(): bool
+    {
+
+
+
+        $is_admin = $this->security->isGranted('ROLE_ADMIN');
+        if( !$is_admin ) $this->addFlash("error","Merci de s'authenfier pour accéder au back-office");
+        return $is_admin;
+    }
+
+
 
 
     #[Route('/admin', name: 'admin.accueil')]
     public function index(): Response
     {
 
-        $formations = $this->formationRepository->findAll();
+
+
+        if(!$this->is_admin()) return $this->redirectToRoute('accueil');
+
+        $formations = $this->formationRepository->findAllLasted(2);
         $categories = $this->categorieRepository->findAll();
         return $this->render($this->ADMIN_ACCUEIL_TWIG_PATH, [
             'formations' => $formations,
@@ -79,6 +107,8 @@ class adminBackController extends AbstractController
     #[Route('/admin/formations', name: 'admin.formations')]
     public function formations_page(): Response
     {
+
+        if(!$this->is_admin()) return $this->redirectToRoute('accueil');
 
         $formations = $this->formationRepository->findAll();
         $categories = $this->categorieRepository->findAll();
@@ -93,6 +123,10 @@ class adminBackController extends AbstractController
     #[Route('/admin/categories', name: 'admin.categories')]
     public function categories_page(): Response
     {       
+
+        if(!$this->is_admin()) return $this->redirectToRoute('accueil');
+
+
         $formations = $this->formationRepository->findAll();
         $categories = $this->categorieRepository->findAll();
         return $this->render($this->CATEGORIES_TWIG_PATH, [
@@ -106,6 +140,10 @@ class adminBackController extends AbstractController
     #[Route('/admin/playlists', name: 'admin.playlists')]
     public function playlists_page(): Response
     {       
+
+        if(!$this->is_admin()) return $this->redirectToRoute('accueil');
+
+
         $playlists = $this->playlistRepository->findAll();
         $categories = $this->categorieRepository->findAll();
         return $this->render($this->PLAYLISTS_TWIG_PATH, [
@@ -120,7 +158,7 @@ class adminBackController extends AbstractController
     public function nouvelleCategorie(Request $request): Response
     {
 
-
+        if(!$this->is_admin()) return $this->redirectToRoute('accueil');
 
         // Vérification du token CSRF
         if (!$this->isCsrfTokenValid('nouvelle_categorie', $request->request->get('_token'))) {
@@ -146,6 +184,7 @@ class adminBackController extends AbstractController
     public function modifierCategorie(Request $request,int $id): Response
     {
 
+        if(!$this->is_admin()) return $this->redirectToRoute('accueil');
 
         $categories = $this->categorieRepository;
         $name = $request->get("nom_categorie");
@@ -181,6 +220,9 @@ class adminBackController extends AbstractController
     
     #[Route('/admin/tri/{champ}/{ordre}/{table}', name: 'formations.sort')]
     public function sort($champ, $ordre, $table=""): Response{
+
+        if(!$this->is_admin()) return $this->redirectToRoute('accueil');
+
         $formations = $this->formationRepository->findAllOrderBy($champ, $ordre, $table);
         $categories = $this->categorieRepository->findAll();
         return $this->render($this->FORMATIONS_TWIG_PATH, [
@@ -192,6 +234,9 @@ class adminBackController extends AbstractController
 
     #[Route('/admin/recherche/{champ}/{table}', name: 'formations.findallcontain')]
     public function findAllContain($champ, Request $request, $table=""): Response{
+
+        if(!$this->is_admin()) return $this->redirectToRoute('accueil');
+
         $valeur = $request->get("recherche");
         $formations = $this->formationRepository->findByContainValue($champ, $valeur, $table);
         $categories = $this->categorieRepository->findAll();
@@ -209,6 +254,9 @@ class adminBackController extends AbstractController
 
     #[Route('/admin/formation/modifier_formation', name: 'admin.modifier_save_formations', methods: ['POST'])]
     public function modifierFormation(Request $request, FormationService $formationService): Response {
+
+        if(!$this->is_admin()) return $this->redirectToRoute('accueil');
+
 
         $parametres = [
         "date" => $request->get("date"),
@@ -239,6 +287,10 @@ class adminBackController extends AbstractController
 
     #[Route('/admin/formation/{id}', name: 'admin.formations.showone')]
     public function showOne($id): Response{
+
+        if(!$this->is_admin()) return $this->redirectToRoute('accueil');
+
+
         $formation = $this->formationRepository->find($id);
 
         return $this->render($this->FORMATION_TWIG_PATH, [
@@ -257,6 +309,9 @@ class adminBackController extends AbstractController
 
     #[Route('/admin/ajouter_formation/', name: 'admin.creer_formations')]
     public function formations_gestion(): Response{
+ 
+        if(!$this->is_admin()) return $this->redirectToRoute('accueil');
+
         // $formation = $this->formationRepository->find($id);
         return $this->render($this->FORMATION_TWIG_PATH, [
             'creating' => true,
@@ -266,39 +321,14 @@ class adminBackController extends AbstractController
         ]);
     }   
 
-    // #[Route('/admin/ajouter_formation/modifier_formation', name: 'admin.creer_save_formations', methods: ['POST'])]
-    // public function save_ajouter_Formation(Request $request): Response{
-
-
-    //     $parametres = [
-    //     "date" => $request->get("date") ?? null,
-    //     "titre" =>  $request->get("formation_title") ?? null,
-    //     "id" =>  $request->get("formation_id") ?? null,
-    //     "description" =>  $request->get("formation_description") ?? "",
-    //     "playlist" =>  $request->get("playlist_formation") ?? "",
-    //     "url" =>  $request->get("formation_videoid") ?? "",
-    //     "categories" =>  $request->get("formation_categories") ?? array()];
-
-
-    //     if( !isset($parametres["id"]) ){
-
-    //         $this->save_data($parametres);
-    //     }
-    //     else{
-            
-    //         $this->update_data($parametres);
-    //     }
-
-
-
-    //     $this->addFlash('success', 'Formation crée avec succès.');
-    //     // return $this->redirectToRoute('admin.formations');
-    // }   
-
-
     #[Route('/admin/ajouter_formation/nouvelle_formation', name: 'admin.creer_save_formations', methods: ['POST'])]
     public function saveAjouterFormation(Request $request, FormationService $formationService): Response
     {
+
+
+        if(!$this->is_admin()) return $this->redirectToRoute('accueil');
+
+
         $parametres = [
             "date" => $request->get("date"),
             "titre" => $request->get("formation_title"),
@@ -325,6 +355,10 @@ class adminBackController extends AbstractController
     #[Route('/admin/playlists/nouvelle_playlist/', name: 'admin.playlists.nouvelle', methods: ['POST'])]
     public function nouvellePlaylist(Request $request): Response
     {
+
+
+        if(!$this->is_admin()) return $this->redirectToRoute('accueil');
+
        
         $nom = $request->get("name");
 
@@ -356,6 +390,10 @@ class adminBackController extends AbstractController
     #[Route('/admin/formations/suppr/{id}', name: 'admin.formations.suppr', methods: ['GET','POST'])]
     public function supprimerFormation(int $id, Request $request): Response
     {
+
+        if(!$this->is_admin()) return $this->redirectToRoute('accueil');
+
+
         $formation = $this->formationRepository->find($id);
 
         if (!$formation) {
@@ -380,6 +418,9 @@ class adminBackController extends AbstractController
     #[Route('/admin/categories/suppr/{id}', name: 'admin.categories.suppr', methods: ['GET','POST'])]
     public function supprimerCategorie(int $id, Request $request): Response
     {
+
+        if(!$this->is_admin()) return $this->redirectToRoute('accueil');
+
         $categorie = $this->categorieRepository->find($id);
 
         if (!$categorie) {
@@ -403,6 +444,9 @@ class adminBackController extends AbstractController
     #[Route('/admin/playlists/suppr/{id}', name: 'admin.playlists.suppr', methods: ['GET','POST'])]
     public function supprimerPlaylist(int $id, Request $request): Response
     {
+
+        if(!$this->is_admin()) return $this->redirectToRoute('accueil');
+
         $playlist = $this->playlistRepository->find($id);
 
 
@@ -434,6 +478,7 @@ class adminBackController extends AbstractController
     public function enregistrerPlaylist(Request $request): Response
     {
 
+        if(!$this->is_admin()) return $this->redirectToRoute('accueil');
 
         $nom = $request->get("nom");
         $id = $request->get("id");
@@ -507,34 +552,7 @@ class adminBackController extends AbstractController
 
         }
 
-        //Modification
-
-
-        // $categories = $this->categorieRepository;
-        // $name = $request->get("nom_categorie");
-
-        // if( strlen($name) == 0 || is_null($id) ) return $this->redirectToRoute('admin.categories');
-
- 
-        // // Vérification du token CSRF
-        // if (!$this->isCsrfTokenValid('modifier_categorie_'.$id, $request->request->get('_token'))) {
-
-        //     $this->addFlash('danger', 'Token CSRF invalide.');
-        //     return $this->redirectToRoute('admin.categories');
-        // }
-
-        // $this->categorie = $this->categorieRepository->findOneBy(['id' => $id]);
-
-
-        // // Vérification de l'id
-        // if ( !$this->categorie ) {
-        //     return $this->redirectToRoute('admin.categories');
-        // }
-
-        // $this->categorie->setName($name);
-
-
-        // $this->categorieRepository->add($this->categorie);
+        
         $this->addFlash('error', 'Ajout Impossible');
 
 
@@ -546,6 +564,9 @@ class adminBackController extends AbstractController
 
     #[Route('/admin/playlists/tri/{champ}/{ordre}', name: 'admin.playlists.sort')]
     public function playlists_sort($champ, $ordre): Response{
+
+        if(!$this->is_admin());return $this->redirectToRoute('accueil');
+
         switch($champ){
             case "name":
                 $playlists = $this->playlistRepository->findAllOrderByName($ordre);
@@ -565,6 +586,9 @@ class adminBackController extends AbstractController
 
     #[Route('/admin/playlists/recherche/{champ}/{table}', name: 'admin.playlists.findallcontain')]
     public function playlists_findAllContain($champ, Request $request, $table=""): Response{
+
+        if(!$this->is_admin()) return $this->redirectToRoute('accueil');
+
         $valeur = $request->get("recherche");
         $playlists = $this->playlistRepository->findByContainValue($champ, $valeur, $table);
         $categories = $this->categorieRepository->findAll();
@@ -578,6 +602,9 @@ class adminBackController extends AbstractController
 
     #[Route('/admin/playlists/editer/{id}', name: 'admin.playlists.editer')]
     public function playlists_showOne($id): Response{
+
+        if(!$this->is_admin()) return $this->redirectToRoute('accueil');
+
         $playlist = $this->playlistRepository->find($id);
         $playlistCategories = $this->categorieRepository->findAllForOnePlaylist($id);
         $playlistFormations = $this->formationRepository->findAllForOnePlaylist($id);
@@ -587,10 +614,6 @@ class adminBackController extends AbstractController
             'playlistformations' => $playlistFormations,
         ]);        
     }       
-
-
-
-
 
 
 
