@@ -32,7 +32,7 @@ Une fois la connexion effectuée, on a accès au back-office (avec la possibilit
 ![{EB22C310-37D5-45A9-8213-D4806F5E1069}](https://github.com/user-attachments/assets/898b58d3-7637-46a9-8656-96adc31e845c)
 
 
-
+## Partie publique
 
 
 La partie publique contient les fonctionnalités globales suivantes :<br>
