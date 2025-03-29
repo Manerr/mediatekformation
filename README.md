@@ -7,6 +7,32 @@ La partie administrateur contient ces fonctionnalités:
 ![image](https://private-user-images.githubusercontent.com/75217835/290880510-fe4165a4-c082-4670-b1a9-b225ab53283c.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDMyNDg2NDIsIm5iZiI6MTc0MzI0ODM0MiwicGF0aCI6Ii83NTIxNzgzNS8yOTA4ODA1MTAtZmU0MTY1YTQtYzA4Mi00NjcwLWIxYTktYjIyNWFiNTMyODNjLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTAzMjklMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwMzI5VDExMzkwMlomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWNiMDE4YmFlNTMyNWQ2M2RjOGUzYzQzMDk1OGU0MTZlZTlhNmJmODY1YjBhYmY5ZWU1OTM3NmE5YTcxYWFhMjQmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.IZeUGXEhq5dGpk4ydJ-moMGdJjPC8zo7VIC0xIjBulU)
 
 
+### Page "0" : le formulaire de connexion (accessible lorsque l'utilisateur n'est pas connecté)
+Cette page permet de se connecter à la partie administrateur: 
+
+![{499F0C68-CD9A-4AD3-AD6C-14A31A6A8612}](https://github.com/user-attachments/assets/3e2a08d8-859f-446b-9205-8440012507e7)
+
+
+Une fois la connexion effectuée, on a accès au back-office (avec la possibilité de revenir sur la partie publique à tout moment): 
+![{D4E18B7F-9A0C-49D0-97E5-2D4AC697F842}](https://github.com/user-attachments/assets/7f70582f-e87d-47ec-ac97-22f4b879125f)
+
+### Pages supplémentaires par rapport à celles accessibles au public:
+
+#### Gestion des catégories: 
+
+![{5A471BCC-7604-49EE-BF70-BAAFA4EE70ED}](https://github.com/user-attachments/assets/ae4c2bc4-1d1d-49c2-9810-8ff50c7aed25)
+
+#### Pages identiques, avec la possiblité de supprimer/modifier certaines données: 
+
+![{8CD91268-CA97-4B7B-AA7D-BC10EF9B43B3}](https://github.com/user-attachments/assets/145f41db-48ae-4684-a512-df55b8eea7c4)
+![{B439FA13-54D5-4BD8-A089-A9F9E13882A0}](https://github.com/user-attachments/assets/df9143c5-9f3a-4627-8c1a-dc7e082c1e1c)
+![{43683C7E-55E4-4F01-BE12-862108AED922}](https://github.com/user-attachments/assets/768f1bd7-b4cc-43d6-8212-51cd267ccd0f)
+
+![{9C2E3677-E5B5-446C-9298-6FAD3F3930D1}](https://github.com/user-attachments/assets/33d940f8-ec37-4893-9f33-774b3b236a01)
+![{EB22C310-37D5-45A9-8213-D4806F5E1069}](https://github.com/user-attachments/assets/898b58d3-7637-46a9-8656-96adc31e845c)
+
+
+
 
 
 La partie publique contient les fonctionnalités globales suivantes :<br>
@@ -16,6 +42,9 @@ La partie publique contient les fonctionnalités globales suivantes :<br>
 
 ## Les différentes pages de la partie publique
 Voici les 5 pages correspondant aux différents cas d’utilisation pour un utilisateur "classique"
+
+
+
 ### Page 1 : l'accueil
 Cette page présente le fonctionnement du site et les 2 dernières vidéos mises en ligne.<br>
 La partie du haut contient une bannière (logo, nom et phrase présentant le but du site) et le menu permettant d'accéder aux 3 pages principales (Accueil, Formations, Playlists).<br>
@@ -49,7 +78,8 @@ La partie haute est identique à la page d'accueil (bannière et menu).<br>
 La partie centrale est séparée en 2 parties :<br>
 •	La partie gauche contient la vidéo qui peut être directement visible dans le site ou sur YouTube.<br>
 •	La partie droite contient la date de parution, le titre de la formation, le nom de la playlist, la liste des catégories et sa description détaillée.<br>
-![img4](https://github.com/user-attachments/assets/f41d05d8-5980-4dc4-9eb7-58d1c31b8a25)
+![{8E0A5B26-D298-48A2-825B-70A4BADF7B3A}](https://github.com/user-attachments/assets/15d4ee39-3d8b-4496-93e5-9b0d9704883f)
+
 ### Page 4 : les playlists
 Cette page présente les playlists.<br>
 La partie haute est identique à la page d'accueil (bannière et menu).<br>
@@ -61,14 +91,16 @@ Au niveau de la colonne "playlist", 2 boutons permettent de trier les lignes en 
 Au niveau de la catégorie, la sélection d'une catégorie dans le combo permet d'afficher uniquement les playlists qui ont cette catégorie. Le fait de sélectionner la ligne vide du combo permet d'afficher à nouveau toutes les playlists.<br>
 Par défaut la liste est triée sur le nom de la playlist.<br>
 Cliquer sur le bouton "voir détail" d'une playlist permet d'accéder à la page 5 qui présente le détail de la playlist concernée.<br>
-![img5](https://github.com/user-attachments/assets/bbe8934f-8d4b-4da2-8216-60b96b726d8a)
+![{4D0109DC-24A5-4B73-BDC0-DF2B6A6AC6F7}](https://github.com/user-attachments/assets/e4ecdf5f-1913-4fc8-b400-f1478bfa031a)
+
 ### Page 5 : détail d'une playlist
 Cette page n'est pas accessible par le menu mais uniquement en cliquant sur un bouton "voir détail" dans la page "Playlists".<br>
 La partie haute est identique à la page d'accueil (bannière et menu).<br>
 La partie centrale est séparée en 2 parties :<br>
 •	La partie gauche contient les informations de la playlist (titre, liste des catégories, description).<br>
 •	La partie droite contient la liste des formations contenues dans la playlist (miniature et titre) avec possibilité de cliquer sur une formation pour aller dans la page de la formation.<br>
-![img6](https://github.com/user-attachments/assets/f216a9e7-084a-4683-9b4e-cada5574a0e2)
+![{77F7BDF7-17FB-4478-BC00-6C97BC1D0EB3}](https://github.com/user-attachments/assets/57ced5e9-dfb9-4f10-9410-f1ddbbb6c70e)
+
 ## La base de données
 La base de données exploitée par le site est au format MySQL.
 ### Schéma conceptuel de données
