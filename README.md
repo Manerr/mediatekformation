@@ -1,10 +1,21 @@
 # Mediatekformation
 ## Présentation
 Ce site, développé avec Symfony 6.4, permet d'accéder aux vidéos d'auto-formation proposées par une chaîne de médiathèques et qui sont aussi accessibles sur YouTube.<br> 
-Actuellement, seule la partie front office a été développée. Elle contient les fonctionnalités globales suivantes :<br>
+Il y a deux partie: la partie back de gestion et la partie front publique: 
+
+La partie administrateur contient ces fonctionnalités:
+![image](https://private-user-images.githubusercontent.com/75217835/290880510-fe4165a4-c082-4670-b1a9-b225ab53283c.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDMyNDg2NDIsIm5iZiI6MTc0MzI0ODM0MiwicGF0aCI6Ii83NTIxNzgzNS8yOTA4ODA1MTAtZmU0MTY1YTQtYzA4Mi00NjcwLWIxYTktYjIyNWFiNTMyODNjLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTAzMjklMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwMzI5VDExMzkwMlomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWNiMDE4YmFlNTMyNWQ2M2RjOGUzYzQzMDk1OGU0MTZlZTlhNmJmODY1YjBhYmY5ZWU1OTM3NmE5YTcxYWFhMjQmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.IZeUGXEhq5dGpk4ydJ-moMGdJjPC8zo7VIC0xIjBulU)
+
+
+
+
+La partie publique contient les fonctionnalités globales suivantes :<br>
 ![img1](https://github.com/user-attachments/assets/9c5c503b-738d-40cf-ba53-36ba4c0209e8)
-## Les différentes pages
-Voici les 5 pages correspondant aux différents cas d’utilisation.
+
+
+
+## Les différentes pages de la partie publique
+Voici les 5 pages correspondant aux différents cas d’utilisation pour un utilisateur "classique"
 ### Page 1 : l'accueil
 Cette page présente le fonctionnement du site et les 2 dernières vidéos mises en ligne.<br>
 La partie du haut contient une bannière (logo, nom et phrase présentant le but du site) et le menu permettant d'accéder aux 3 pages principales (Accueil, Formations, Playlists).<br>
@@ -26,7 +37,9 @@ Au niveau des colonnes "formation" et "playlist", il est possible de filtrer les
 Au niveau de la catégorie, la sélection d'une catégorie dans le combo permet d'afficher uniquement les formations qui ont cette catégorie. Le fait de sélectionner la ligne vide du combo permet d'afficher à nouveau toutes les formations.<br>
 Par défaut la liste est triée sur la date par ordre décroissant (la formation la plus récente en premier).<br>
 Le fait de cliquer sur une miniature permet d'accéder à la troisième page contenant le détail de la formation.<br>
-![img3](https://github.com/user-attachments/assets/bc033cf9-41a5-4cad-a268-8abb400965c5)
+![{17D43CF9-B8FC-48AD-B825-F35C92A0F96B}](https://github.com/user-attachments/assets/a0dc9af1-8c3a-4f94-8aa8-567fdbf03298)
+
+
 ### Page 3 : détail d'une formation
 Cette page n'est pas accessible par le menu mais uniquement en cliquant sur une miniature dans la page "Formations" ou une image dans la page "Accueil".<br>
 La partie haute est identique à la page d'accueil (bannière et menu).<br>

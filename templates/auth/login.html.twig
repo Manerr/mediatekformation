@@ -1,23 +1,44 @@
 {% extends 'base.html.twig' %}
 {% block title %}Log In!{% endblock %}
 {% block body %}
-<div class="container">
-    <div class="row">
-        <div class="login-form bg-light mt-4 p-4">
+<style>
+
+    html{height: 100%}
+
+    body{
+        min-height: 100%;
+        display: flex;
+    }
+
+    body > div{
+        display: flex;
+    }
+
+    #form-container{
+        width: 90%;
+        max-width: 600px;
+        margin: auto;
+    }
+
+
+</style>
+<div class="container m-auto">
+    <div class="row h-100">
+        <div class="login-form bg-light mt-auto p-4" id="form-container">
             <form method="post" class="row g-3">
                 <input type="hidden" name="_token" value="{{csrf_token('login_token')}}" >
-                <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+                <h1 class="h3 mb-3 font-weight-normal">Merci de se connecter</h1>
                 <div class="col-12">
-                    <label for="inputEmail">Email</label>
+                    <label for="inputEmail">Email ou nom</label>
                     <input type="text" name="name" id="inputName" class="form-control" required autofocus>
                 </div>
                 <div class="col-12">
-                    <label for="inputPassword">Password</label>
+                    <label for="inputPassword">Mot de passe</label>
                     <input type="password" name="pwd" id="inputPassword" class="form-control" required>
                 </div>
                 <div class="col-12">
                     <button class="btn btn-lg btn-primary float-end" type="submit">
-                        Sign in
+                        Se connecter
                     </button>
                 </div>
             </form>

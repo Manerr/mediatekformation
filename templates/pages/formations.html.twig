@@ -18,7 +18,6 @@
     </div>
 
     <table class="table table-striped">
-        <caption>Tableau des formations</caption>
         <thead>
             <tr>
                 <th class="text-left align-top" scope="col">
@@ -68,13 +67,8 @@
                     <a href="{{ path('formations.sort', {champ:'publishedAt', ordre:'ASC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true"><</a>
                     <a href="{{ path('formations.sort', {champ:'publishedAt', ordre:'DESC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true">></a>                    
                 </th>
-                <th></th>
-                <th class="text-center align-middle" scope="col">
-                    {% if controller_name|default == 'adminBackController' %}
-                    <a class="btn btn-primary" href="{{ path('admin.creer_formations') }}">
-                        Ajouter une formation
-                    </a>
-                    {% endif %}
+                <th class="text-center align-top" scope="col">
+                    &nbsp;
                 </th>
             </tr>
         </thead>
@@ -99,20 +93,11 @@
                     </td>
                     <td class="text-center">
                         {% if formation.miniature %}
-                            
-                            {% if controller_name|default == 'adminBackController' %}
-                            <a href="{{ path('admin.formations.showone', {id:formation.id}) }}">
-                                <img src="{{ formation.miniature }}" alt="miniature de la formation">
-                            </a>
-                            {% else %}
                             <a href="{{ path('formations.showone', {id:formation.id}) }}">
-                                <img src="{{ formation.miniature }}" alt="miniature de la formation">
+                                <img src="{{ formation.miniature }}">
                             </a>
-                            {% endif %}
                         {% endif %}
                     </td>
-                    
-                    
                 </tr>
             {% endfor %}
         </tbody>

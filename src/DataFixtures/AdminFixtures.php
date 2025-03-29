@@ -21,7 +21,7 @@ class AdminFixtures extends Fixture
         $admin = new User();
         $admin->setUsername('admin');
         $admin->setRoles(['ROLE_ADMIN']); // Add admin role
-        $hashedPassword = $this->passwordHasher->hashPassword($admin, '1admingestion!');
+        $hashedPassword = $this->passwordHasher->hashPassword($admin, 'motdepassecaché');
         $admin->setPassword($hashedPassword);
 
         $manager->persist($admin);

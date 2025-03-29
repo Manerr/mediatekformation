@@ -218,7 +218,7 @@ class adminBackController extends AbstractController
     }
 
     
-    #[Route('/admin/tri/{champ}/{ordre}/{table}', name: 'formations.sort')]
+    #[Route('/admin/tri/{champ}/{ordre}/{table}', name: 'admin.formations.sort')]
     public function sort($champ, $ordre, $table=""): Response{
 
         if(!$this->is_admin()) return $this->redirectToRoute('accueil');
@@ -232,7 +232,7 @@ class adminBackController extends AbstractController
         ]);
     }     
 
-    #[Route('/admin/recherche/{champ}/{table}', name: 'formations.findallcontain')]
+    #[Route('/admin/recherche/{champ}/{table}', name: 'admin.formations.findallcontain')]
     public function findAllContain($champ, Request $request, $table=""): Response{
 
         if(!$this->is_admin()) return $this->redirectToRoute('accueil');
