@@ -22,7 +22,9 @@ La partie du haut contient une bannière (logo, nom et phrase présentant le but
 Le centre contient un texte de présentation avec, entre autres, les liens pour accéder aux 2 autres pages principales.<br>
 La partie basse contient les 2 dernières formations mises en ligne. Cliquer sur une image permet d'accéder à la page 3 de présentation de la formation.<br>
 Le bas de page contient un lien pour accéder à la page des CGU : ce lien est présent en bas de chaque page excepté la page des CGU.<br>
-![img2](https://github.com/user-attachments/assets/523b4233-3505-4b8c-9db0-5e7b72965bc6)
+![image](https://github.com/user-attachments/assets/450a3e77-1feb-41c6-9bb5-0d8c7cec9b87)
+
+
 ### Page 2 : les formations
 Cette page présente les formations proposées en ligne (accessibles sur YouTube).<br>
 La partie haute est identique à la page d'accueil (bannière et menu).<br>
@@ -37,7 +39,8 @@ Au niveau des colonnes "formation" et "playlist", il est possible de filtrer les
 Au niveau de la catégorie, la sélection d'une catégorie dans le combo permet d'afficher uniquement les formations qui ont cette catégorie. Le fait de sélectionner la ligne vide du combo permet d'afficher à nouveau toutes les formations.<br>
 Par défaut la liste est triée sur la date par ordre décroissant (la formation la plus récente en premier).<br>
 Le fait de cliquer sur une miniature permet d'accéder à la troisième page contenant le détail de la formation.<br>
-![{17D43CF9-B8FC-48AD-B825-F35C92A0F96B}](https://github.com/user-attachments/assets/a0dc9af1-8c3a-4f94-8aa8-567fdbf03298)
+![image](https://github.com/user-attachments/assets/234e75cd-6cbb-4191-a042-a21907f9a0d8)
+
 
 
 ### Page 3 : détail d'une formation
