@@ -4,7 +4,7 @@ Ce site, développé avec Symfony 6.4, permet d'accéder aux vidéos d'auto-form
 Il y a deux partie: la partie back de gestion et la partie front publique: 
 
 
-Le tutoriel d'utilisation est disponible à cet adresse: <video src="https://manerr.github.io/mediatekformation/mediatekformations_soustitree.mp4"></video>
+Le tutoriel d'utilisation est disponible à cet adresse: (video)[https://manerr.github.io/mediatekformation/mediatekformations_soustitree.mp4]
 
 
 Le rapport est disponible quand à lui à cette adresse: https://manerr.github.io/mediatekformation/Rapport%20mediatekformation.pdf
