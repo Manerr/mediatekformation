@@ -3,6 +3,13 @@
 Ce site, développé avec Symfony 6.4, permet d'accéder aux vidéos d'auto-formation proposées par une chaîne de médiathèques et qui sont aussi accessibles sur YouTube.<br> 
 Il y a deux partie: la partie back de gestion et la partie front publique: 
 
+
+Le tutoriel d'utilisation est disponible à cet adresse: <video src="https://manerr.github.io/mediatekformation/mediatekformations_soustitree.mp4"></video>
+
+
+Le rapport est disponible quand à lui à cette adresse: https://manerr.github.io/mediatekformation/Rapport%20mediatekformation.pdf
+
+
 La partie administrateur contient ces fonctionnalités:
 
 ### Page "0" : le formulaire de connexion (accessible lorsque l'utilisateur n'est pas connecté)
@@ -128,5 +135,5 @@ Le chemin des images (des 2 tailles) n'est pas mémorisé dans la BDD car il peu
 - Télécharger le code et le dézipper dans www de Wampserver (ou dossier équivalent) puis renommer le dossier en "mediatekformation".<br>
 - Ouvrir une fenêtre de commandes en mode admin, se positionner dans le dossier du projet et taper "composer install" pour reconstituer le dossier vendor.<br>
 - Dans phpMyAdmin, se connecter à MySQL en root sans mot de passe et créer la BDD 'mediatekformation'.<br>
-- Récupérer le fichier mediatekformation.sql en racine du projet et l'utiliser pour remplir la BDD (si vous voulez mettre un login/pwd d'accès, il faut créer un utilisateur, lui donner les droits sur la BDD et il faut le préciser dans le fichier ".env" en racine du projet).<br>
+- Récupérer le fichier backup_user.sql en racine du projet et l'utiliser pour remplir la BDD (si vous voulez mettre un login/pwd d'accès, il faut créer un utilisateur, lui donner les droits sur la BDD et il faut le préciser dans le fichier ".env" en racine du projet).<br>
 - De préférence, ouvrir l'application dans un IDE professionnel. L'adresse pour la lancer est : http://localhost/mediatekformation/public/index.php<br>
