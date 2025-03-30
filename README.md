@@ -4,8 +4,6 @@ Ce site, développé avec Symfony 6.4, permet d'accéder aux vidéos d'auto-form
 Il y a deux partie: la partie back de gestion et la partie front publique: 
 
 La partie administrateur contient ces fonctionnalités:
-![image](https://private-user-images.githubusercontent.com/75217835/290880510-fe4165a4-c082-4670-b1a9-b225ab53283c.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDMyNDg2NDIsIm5iZiI6MTc0MzI0ODM0MiwicGF0aCI6Ii83NTIxNzgzNS8yOTA4ODA1MTAtZmU0MTY1YTQtYzA4Mi00NjcwLWIxYTktYjIyNWFiNTMyODNjLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTAzMjklMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwMzI5VDExMzkwMlomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWNiMDE4YmFlNTMyNWQ2M2RjOGUzYzQzMDk1OGU0MTZlZTlhNmJmODY1YjBhYmY5ZWU1OTM3NmE5YTcxYWFhMjQmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.IZeUGXEhq5dGpk4ydJ-moMGdJjPC8zo7VIC0xIjBulU)
-
 
 ### Page "0" : le formulaire de connexion (accessible lorsque l'utilisateur n'est pas connecté)
 Cette page permet de se connecter à la partie administrateur: 
