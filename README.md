@@ -16,6 +16,8 @@ La partie administrateur contient ces fonctionnalités:
 ### Page "0" : le formulaire de connexion (accessible lorsque l'utilisateur n'est pas connecté)
 Cette page permet de se connecter à la partie administrateur: 
 
+Compte: admin 1admingestion!
+
 ![{499F0C68-CD9A-4AD3-AD6C-14A31A6A8612}](https://github.com/user-attachments/assets/3e2a08d8-859f-446b-9205-8440012507e7)
 
 
