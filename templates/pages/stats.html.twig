@@ -1,0 +1,49 @@
+{% extends "basefront.html.twig" %}
+
+{% block body %}
+    <div class="container my-5">
+    <h2>Statistiques du site</h2>
+    <ul>
+        <li>Nombre de categories : {{ nbCategories }}</li>
+        <li>Nombre de formations : {{ nbFormations }}</li>
+    </ul>
+
+    <h3>Categories</h3>
+    <canvas id="formationsChart" width="400" height="200"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('formationsChart').getContext('2d');
+
+    const data = {
+        labels: {{ categoriesNames|json_encode|raw }},
+        datasets: [{
+            label: 'Nombre de formations',
+            data: {{ formationsCounts|json_encode|raw }},
+            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1,
+            borderRadius: 5,
+        }]
+    };
+
+    const config = {
+        type: 'bar',
+        data: data,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    precision: 0,
+                    stepSize: 1
+                }
+            }
+        }
+    };
+
+    new Chart(ctx, config);
+</script>
+
+
+{% endblock %}

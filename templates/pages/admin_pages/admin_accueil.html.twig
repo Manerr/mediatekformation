@@ -4,7 +4,15 @@
         <h3>Bienvenue sur le back-office du site de MediaTek86 consacré aux formations en ligne</h3>
     </p>
     
+    
     <p class="mt-5">
+    
+{% if app.user and app.user.getLastConnection %}
+    Bienvenue, {{ app.user.username }}<br />
+    Dernière connexion le {{ app.user.getLastConnection|date("le d F à H 'i' s", 'Europe/Paris') }}<br />
+    <hr/>
+{% endif %}
+
         Voici les <strong>deux dernières formations</strong> ajoutées au catalogue :
         <table class="table">
             <caption>Deux dernières formations disponibles</caption>
@@ -36,6 +44,27 @@
                 {% endfor %}    
             </tr>
 
-        </table>        
+        </table>
+
     </p>
+
+    <div class="container my-5">
+    <h4 class="mb-3">Catégories des formations</h4>
+
+    <ul class="list-group">
+        {% for row in categoriesByFormations %}
+            {% set categorie = row[0] %}
+            {% set nb = row.nbFormations %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ categorie.name }}
+                <span class="badge bg-primary rounded-pill">{{ nb }}</span>
+            </li>
+        {% else %}
+            <li class="list-group-item text-center">Aucune catégorie trouvée.</li>
+        {% endfor %}
+    </ul>
+</div>
+
+        <a href="{{ path('app_stats_pdf') }}" class="btn btn-info mb-3" target="_blank" rel="noopener">Imprimer les catégories</a>
+        <a href="{{ path('stats') }}" class="btn btn-info mb-3">Voir les statistiques</a>
 {% endblock %}

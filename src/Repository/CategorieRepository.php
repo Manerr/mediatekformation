@@ -55,5 +55,36 @@ class CategorieRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+/**
+ * Retourne le nombre de formations associées à une catégorie
+ * @param int $idCategorie
+ * @return int
+ */
+public function countFormationsForOneCategorie(int $idCategorie): int
+{
+    return (int) $this->getEntityManager()->createQueryBuilder()
+        ->select('COUNT(f.id)')
+        ->from('App\Entity\Formation', 'f')
+        ->join('f.categories', 'c')
+        ->where('c.id = :id')
+        ->setParameter('id', $idCategorie)
+        ->getQuery()
+        ->getSingleScalarResult();
+}
+
+
+public function findCategoriesOrderByNbFormationsDesc(): array
+{
+    return $this->createQueryBuilder('c')
+        ->select('c', 'COUNT(f.id) AS nbFormations')
+        ->leftJoin('c.formations', 'f')
+        ->groupBy('c.id')
+        ->orderBy('nbFormations', 'DESC')
+        ->getQuery()
+        ->getResult();
+}
+
+
     
 }

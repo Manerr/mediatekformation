@@ -91,17 +91,29 @@ class adminBackController extends AbstractController
     public function index(): Response
     {
 
+        setlocale(LC_TIME, 'fr_FR.UTF-8');
+        \Locale::setDefault('fr_FR');
+
+
+
 
 
         if(!$this->is_admin()) return $this->redirectToRoute('accueil');
 
         $formations = $this->formationRepository->findAllLasted(2);
         $categories = $this->categorieRepository->findAll();
+
+        $categoriesByFormations = $this->categorieRepository->findCategoriesOrderByNbFormationsDesc();
+
         return $this->render($this->ADMIN_ACCUEIL_TWIG_PATH, [
             'formations' => $formations,
             'categories' => $categories,
-            'controller_name' => $this->CONTROLLER_NAME
+            'controller_name' => $this->CONTROLLER_NAME,
+            'categoriesByFormations' => $categoriesByFormations
+
         ]);
+
+
     }
 
     #[Route('/admin/formations', name: 'admin.formations')]

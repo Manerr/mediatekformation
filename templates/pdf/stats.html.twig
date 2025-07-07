@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Catégories des formations</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            padding: 40px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h4 {
+            margin-bottom: 20px;
+        }
+        .list-group {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .list-group-item {
+            border: 1px solid #ccc;
+            padding: 10px 15px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .badge {
+            background-color: #007bff;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h4 class="mb-3">Catégories des formations</h4>
+
+        <ul class="list-group">
+            {% for row in categoriesByFormations %}
+                {% set categorie = row[0] %}
+                {% set nb = row.nbFormations %}
+                <li class="list-group-item">
+                    {{ categorie.name }}
+                    <span class="badge">{{ nb }}</span>
+                </li>
+            {% else %}
+                <li class="list-group-item text-center">Aucune catégorie trouvée.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

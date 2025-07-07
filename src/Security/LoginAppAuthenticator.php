@@ -13,17 +13,25 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Doctrine\ORM\EntityManagerInterface; // Ajouté pour la persistance
+use App\Entity\User; // Pour l'autocomplétion
+
 
 class LoginAppAuthenticator extends AbstractAuthenticator
 {
     private UserPasswordHasherInterface $passwordHasher;
     private UrlGeneratorInterface $urlGenerator;
+    private EntityManagerInterface $entityManager;
 
     // Injection des dépendances dans le constructeur
-    public function __construct(UserPasswordHasherInterface $passwordHasher, UrlGeneratorInterface $urlGenerator)
-    {
+    public function __construct(
+        UserPasswordHasherInterface $passwordHasher,
+        UrlGeneratorInterface $urlGenerator,
+        EntityManagerInterface $entityManager
+    ) {
         $this->passwordHasher = $passwordHasher;
         $this->urlGenerator = $urlGenerator;
+        $this->entityManager = $entityManager;
     }
 
     public function supports(Request $request): ?bool
@@ -45,6 +53,13 @@ class LoginAppAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        $user = $token->getUser();
+        if ($user instanceof User) {
+            $user->setLastConnection(new \DateTime());
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+        }
+
         return new RedirectResponse($this->urlGenerator->generate('admin.accueil'));  // Redirection après succès
     }
 
